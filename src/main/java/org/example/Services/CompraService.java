@@ -1,15 +1,20 @@
 package org.example.Services;
 
-import org.example.Models.Compra;
-import org.example.Models.LineaCompras;
-import org.example.Models.Producto;
-import org.example.Models.Usuario;
+import org.example.Models.*;
+import org.example.Repositories.CompraRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 @Service
 public class CompraService {
+
+    @Autowired
+    private CompraRepository compraRepository;
+
+    public List<Compra> getAllCompra() {
+        return compraRepository.findAll();
+    }
 
     public void agregarLineaDeCompra(Compra compra, LineaCompras lineaCompras) {
         compra.getLineaCompras().add(lineaCompras);

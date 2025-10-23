@@ -3,11 +3,21 @@ package org.example.Services;
 import org.example.Models.AdministradorContenido;
 import org.example.Models.Cliente;
 import org.example.Models.Usuario;
+import org.example.Repositories.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
 public class UsuarioService {
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    public List<Usuario> getAllUsuario() {
+        return usuarioRepository.findAll();
+    }
+
     public static void registrarUsuario(List<Usuario> usuarios, Scanner scanner) {
         System.out.println("\nPara registrarse llene los campos acontinuacion:");
         System.out.print("- Nombre: ");
