@@ -2,11 +2,20 @@ package org.example.Services;
 
 import org.example.Models.Producto;
 import org.example.Models.Usuario;
+import org.example.Repositories.ProductoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
 public class ProductoService {
+
+    @Autowired
+    private ProductoRepository productoRepository;
+
+    public List<Producto> getAllProducto() {
+        return productoRepository.findAll();
+    }
 
     // METODO PARA REGISTRAR PRODUCTOS
     public static void registrarProducto(List<Producto> productos, Scanner scanner, Usuario usuarioAutenticado) {
