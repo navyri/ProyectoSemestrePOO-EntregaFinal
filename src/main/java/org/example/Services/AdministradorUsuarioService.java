@@ -42,4 +42,19 @@ public class AdministradorUsuarioService {
         }
         admin.setNivelAcceso(nivelAcceso);
     }
+
+    public AdministradorUsuario crearAdministrador(AdministradorUsuario admin) {
+        return administradorUsuarioRepository.save(admin);
+    }
+
+    // Actualizar
+    public AdministradorUsuario actualizarAdministrador(AdministradorUsuario datosActualizados) {
+        datosActualizados.setNivelAcceso(datosActualizados.getNivelAcceso());
+        return administradorUsuarioRepository.save(datosActualizados);
+    }
+
+    public void eliminarAdministrador(AdministradorUsuario admin){
+        administradorUsuarioRepository.delete(admin);
+    }
+
 }
