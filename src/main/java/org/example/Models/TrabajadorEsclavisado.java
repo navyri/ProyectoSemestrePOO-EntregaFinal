@@ -17,10 +17,13 @@ public class TrabajadorEsclavisado {
     private int edad;
     private Date fechaCaptura;
     private int salud;
-    private String asignadoA;
+
+    @ManyToOne
+    @JoinColumn(name="frabrica_id")
+    private Fabrica asignadoA;
 
     // CONSTRUCTOR
-    public TrabajadorEsclavisado(UUID id, String nombre, String paisOrigen, int edad, Date fechaCaptura, int salud, String asignadoA) {
+    public TrabajadorEsclavisado(UUID id, String nombre, String paisOrigen, int edad, Date fechaCaptura, int salud, Fabrica asignadoA) {
         this.id = id;
         this.nombre = nombre;
         this.paisOrigen = paisOrigen;
@@ -29,6 +32,10 @@ public class TrabajadorEsclavisado {
         this.salud = salud;
         this.asignadoA = asignadoA;
     }
+
+    @ManyToOne
+    @JoinColumn(name = "registro_id")
+    private RegistroEsclavos registro;
 
     protected TrabajadorEsclavisado() {
     }
@@ -82,11 +89,16 @@ public class TrabajadorEsclavisado {
         this.salud = salud;
     }
 
-    public String getAsignadoA() {
+    public Fabrica getAsignadoA() {
         return asignadoA;
     }
 
-    public void setAsignadoA(String asignadoA) {
+    public void setAsignadoA(Fabrica asignadoA) {
         this.asignadoA = asignadoA;
     }
+
+    public RegistroEsclavos getRegistro(){return registro;}
+
+    public void setRegistro(RegistroEsclavos registro) { this.registro = registro; }
 }
+
