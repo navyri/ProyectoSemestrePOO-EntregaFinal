@@ -15,7 +15,13 @@ public class RegistroEsclavos {
     private Long id;
     private Date ultimoAcceso;
     private String nivelCifrado;
+
+    @OneToMany(mappedBy = "registro", cascade = CascadeType.ALL)
     private List<TrabajadorEsclavisado> trabajadorEsclavisadoList;
+
+    @ManyToOne
+    @JoinColumn(name="duenia_id")
+    private Duenia cabrita;
 
     // CONSTRUCTOR
     public RegistroEsclavos(Date ultimoAcceso, String nivelCifrado) {
@@ -44,4 +50,10 @@ public class RegistroEsclavos {
     public void setNivelCifrado(String nivelCifrado) {
         this.nivelCifrado = nivelCifrado;
     }
+
+    public List<TrabajadorEsclavisado> getTrabajadores() { return trabajadorEsclavisadoList; }
+    public void setTrabajadores(List<TrabajadorEsclavisado> trabajadores) { this.trabajadorEsclavisadoList = trabajadorEsclavisadoList; }
+
+    public Duenia getDuenia() { return cabrita; }
+    public void setDuenia(Duenia duenia) { this.cabrita = duenia; }
 }
