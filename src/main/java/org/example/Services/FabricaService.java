@@ -15,7 +15,16 @@ public class FabricaService {
     public List<Fabrica> getAllFabrica() {
         return fabricaRepository.findAll();
     }
-    public Optional<Fabrica> findById(UUID id) { return fabricaRepository.findById(id); }
-    public Fabrica save(Fabrica f) { return fabricaRepository.save(f); }
-    public void delete(UUID id) { fabricaRepository.deleteById(id); }
+
+    public Optional<Fabrica> findById(UUID id) {
+        return fabricaRepository.findById(id);
+    }
+
+    public Fabrica save(Fabrica f) {
+        return fabricaRepository.save(f);
+    }
+
+    public void delete(UUID id) {
+        fabricaRepository.deleteById(id);
+    }
 }

@@ -9,7 +9,7 @@ public abstract class Usuario {
 
     // ATRIBUTOS
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     protected UUID id;
     protected String nombre;
     protected String email;

@@ -36,25 +36,25 @@ public class AdministradorContenidoService {
     }
 
     public Producto agregarProducto(AdministradorContenido admin, Producto producto) {
-        // Lógica para agregar producto
+        // Logica para agregar producto
         if ((admin.getPermisosEdicion() == false)) {
-            throw new IllegalStateException("El administrador no tiene permisos de edición.");
+            throw new IllegalStateException("El administrador no tiene permisos de edicion.");
         }else{
             return productoRepository.save(producto);
         }
     }
 
     public void eliminarProducto(AdministradorContenido admin, Producto producto) {
-        // Lógica para eliminar producto
+        // Logica para eliminar producto
         if (admin.getPermisosEdicion() ==false) {
-            throw new IllegalStateException("El administrador no tiene permisos de edición.");
+            throw new IllegalStateException("El administrador no tiene permisos de edicion.");
         }
         productoRepository.delete(producto);
     }
-    //elimar por ID
+
     public void eliminarProductoID(AdministradorContenido admin, UUID productoId) {
         if (admin.getPermisosEdicion() == false) {
-            throw new IllegalStateException("El administrador no tiene permisos de edición.");
+            throw new IllegalStateException("El administrador no tiene permisos de edicion.");
         } else {
             productoRepository.deleteById(productoId);
         }
@@ -62,7 +62,7 @@ public class AdministradorContenidoService {
 
     public Producto actualizarProducto(AdministradorContenido admin, Producto producto) {
         if (admin.getPermisosEdicion() == false) {
-            throw new IllegalStateException("El administrador no tiene permisos de edición.");
+            throw new IllegalStateException("El administrador no tiene permisos de edicion.");
         }else{
             return productoRepository.save(producto);
         }
@@ -70,7 +70,7 @@ public class AdministradorContenidoService {
 
     public Categoria gestionarCategorias(AdministradorContenido admin, Categoria categoria) {
         if (admin.getPermisosEdicion() == false) {
-            throw new IllegalStateException("El administrador no tiene permisos de edición.");
+            throw new IllegalStateException("El administrador no tiene permisos de edicion.");
         } else {
             return categoriaRepository.save(categoria);
         }

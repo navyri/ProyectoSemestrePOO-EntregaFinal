@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/registros")
@@ -24,7 +25,7 @@ public class RegistroEsclavosController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RegistroEsclavos> getById(@PathVariable Long id) {
+    public ResponseEntity<RegistroEsclavos> getById(@PathVariable UUID id) {
         Optional<RegistroEsclavos> registro = service.findById(id);
         return registro.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -36,7 +37,7 @@ public class RegistroEsclavosController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RegistroEsclavos> update(@PathVariable Long id, @RequestBody RegistroEsclavos rDetalles) {
+    public ResponseEntity<RegistroEsclavos> update(@PathVariable UUID id, @RequestBody RegistroEsclavos rDetalles) {
         Optional<RegistroEsclavos> optionalRegistro = service.findById(id);
 
         if (optionalRegistro.isPresent()) {
@@ -53,7 +54,7 @@ public class RegistroEsclavosController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable UUID id) {
         service.delete(id);
     }
 }

@@ -25,19 +25,19 @@ public class DueniaController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Duenia> getById(@PathVariable Long id) { return objDuenia.findById(id); }
+    public Optional<Duenia> getById(@PathVariable UUID id) { return objDuenia.findById(id); }
 
     @PostMapping
     public Duenia create(@RequestBody Duenia d) { return objDuenia.save(d); }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Duenia> actualizarDuenia(@PathVariable Long id, @RequestBody Duenia duenia) {
+    public ResponseEntity<Duenia> actualizarDuenia(@PathVariable UUID id, @RequestBody Duenia duenia) {
         Duenia actualizada = objDuenia.actualizarDuenia(id, duenia);
         return actualizada != null ? ResponseEntity.ok(actualizada) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarDuenia(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminarDuenia(@PathVariable UUID id) {
         boolean eliminada = objDuenia.eliminarDuenia(id);
         return eliminada ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }

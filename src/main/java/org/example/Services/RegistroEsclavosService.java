@@ -5,6 +5,7 @@ import org.example.Repositories.RegistroEsclavosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class RegistroEsclavosService {
 
@@ -15,7 +16,15 @@ public class RegistroEsclavosService {
         return registroEsclavosRepository.findAll();
     }
 
-    public Optional<RegistroEsclavos> findById(Long id) { return registroEsclavosRepository.findById(id); }
-    public RegistroEsclavos save(RegistroEsclavos r) { return registroEsclavosRepository.save(r); }
-    public void delete(Long id) { registroEsclavosRepository.deleteById(id); }
+    public Optional<RegistroEsclavos> findById(UUID id) {
+        return registroEsclavosRepository.findById(id);
+    }
+
+    public RegistroEsclavos save(RegistroEsclavos r) {
+        return registroEsclavosRepository.save(r);
+    }
+
+    public void delete(UUID id) {
+        registroEsclavosRepository.deleteById(id);
+    }
 }
