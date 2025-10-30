@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/registros")
@@ -24,8 +25,10 @@ public class RegistroEsclavosController {
     }
 
     @GetMapping("/{id}")
-    public RegistroEsclavos getById(@PathVariable Long id) {
-        return service.findById(id);
+    public ResponseEntity<RegistroEsclavos> getById(@PathVariable UUID id) {
+        Optional<RegistroEsclavos> registro = service.findById(id);
+        return registro.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -34,12 +37,24 @@ public class RegistroEsclavosController {
     }
 
     @PutMapping("/{id}")
-    public RegistroEsclavos update(@PathVariable Long id, @RequestBody RegistroEsclavos rDetalles) {
-        return service.update(id, rDetalles);
+    public ResponseEntity<RegistroEsclavos> update(@PathVariable UUID id, @RequestBody RegistroEsclavos rDetalles) {
+        Optional<RegistroEsclavos> optionalRegistro = service.findById(id);
+
+        if (optionalRegistro.isPresent()) {
+            RegistroEsclavos existingRegistro = optionalRegistro.get();
+            existingRegistro.setUltimoAcceso(rDetalles.getUltimoAcceso());
+            existingRegistro.setNivelCifrado(rDetalles.getNivelCifrado());
+            existingRegistro.setTrabajadores(rDetalles.getTrabajadores());
+            existingRegistro.setDuenia(rDetalles.getDuenia());
+
+            return ResponseEntity.ok(service.save(existingRegistro));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable UUID id) {
         service.delete(id);
     }
 }

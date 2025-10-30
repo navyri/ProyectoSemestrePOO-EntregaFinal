@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.UUID;
 
 @Entity
 @Table(name = "registro_esclavos")
@@ -11,8 +12,8 @@ public class RegistroEsclavos {
 
     // ATRIBUTOS
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
     private Date ultimoAcceso;
     private String nivelCifrado;
 
@@ -48,9 +49,23 @@ public class RegistroEsclavos {
         this.nivelCifrado = nivelCifrado;
     }
 
-    public List<TrabajadorEsclavisado> getTrabajadores() { return trabajadorEsclavisadoList; }
-    public void setTrabajadores(List<TrabajadorEsclavisado> trabajadores) { this.trabajadorEsclavisadoList = trabajadorEsclavisadoList; }
+    public List<TrabajadorEsclavisado> getTrabajadores() {
+        return trabajadorEsclavisadoList;
+    }
 
-    public Duenia getDuenia() { return cabrita; }
-    public void setDuenia(Duenia duenia) { this.cabrita = duenia; }
+    public void setTrabajadores(List<TrabajadorEsclavisado> trabajadores) {
+        this.trabajadorEsclavisadoList = trabajadores;
+    }
+
+    public Duenia getDuenia() {
+        return cabrita;
+    }
+
+    public void setDuenia(Duenia duenia) {
+        this.cabrita = duenia;
+    }
+
+    public UUID getId() {
+        return id;
+    }
 }

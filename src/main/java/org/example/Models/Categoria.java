@@ -10,8 +10,7 @@ public class Categoria {
 
     // ATRIBUTOS
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)//este funciona con Long e Integer
-    @GeneratedValue(strategy = GenerationType.AUTO) //Este si es para UUID
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private String nombre;
     private String descripcion;
@@ -57,7 +56,12 @@ public class Categoria {
         return this.descripcion;
     }
 
-    public List<Producto> getProductos() { return producto; }
-    public void setProductos(List<Producto> productos) { this.producto = productos; }
+    public List<Producto> getProductos() {
+        return producto;
+    }
+
+    public void setProductos(List<Producto> productos) {
+        this.producto = productos;
+    }
 
 }

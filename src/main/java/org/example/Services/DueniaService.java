@@ -15,17 +15,27 @@ public class DueniaService {
     public List<Duenia> getAllDuenia() {
         return dueniaRepository.findAll();
     }
-    public Optional<Duenia> findById(Long id) { return dueniaRepository.findById(id); }
-    public Duenia save(Duenia d) { return dueniaRepository.save(d); }
 
-    public boolean eliminarDuenia(Long id) {
+    public Optional<Duenia> findById(UUID id) {
+        return dueniaRepository.findById(id);
+    }
+
+    public Duenia save(Duenia d) {
+        // Si ya existe alguna Duenia en la base, rechaza la creacion
+        if(dueniaRepository.count() > 0 && d.getId() == null) {
+            throw new IllegalStateException("Solo puede existir una Dueña en el sistema");
+        }
+        return dueniaRepository.save(d);
+    }
+
+    public boolean eliminarDuenia(UUID id) {
         if (dueniaRepository.existsById(id)) {
             dueniaRepository.deleteById(id);
             return true;
         }
         return false;
     }
-    public Duenia actualizarDuenia(Long id, Duenia dueniaActualizada) {
+    public Duenia actualizarDuenia(UUID id, Duenia dueniaActualizada) {
         return dueniaRepository.findById(id).map(duenia -> {
             duenia.setClaveMaestra(dueniaActualizada.getClaveMaestra());
             duenia.setFechaCoronacion(dueniaActualizada.getFechaCoronacion());
