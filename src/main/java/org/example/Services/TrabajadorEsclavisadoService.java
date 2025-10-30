@@ -15,7 +15,15 @@ public class TrabajadorEsclavisadoService {
     public List<TrabajadorEsclavisado> getAllTrabajadorEsclavisado() {
         return trabajadorEsclavisadoRepository.findAll();
     }
-    public Optional<TrabajadorEsclavisado> findById(UUID id) { return trabajadorEsclavisadoRepository.findById(id); }
-    public TrabajadorEsclavisado save(TrabajadorEsclavisado t) { return trabajadorEsclavisadoRepository.save(t); }
-    public void delete(UUID id) { trabajadorEsclavisadoRepository.deleteById(id); }
+    public Optional<TrabajadorEsclavisado> findById(UUID id) {
+        return trabajadorEsclavisadoRepository.findById(id);
+    }
+
+    public TrabajadorEsclavisado save(TrabajadorEsclavisado t) {
+        return trabajadorEsclavisadoRepository.save(t);
+    }
+
+    public void delete(UUID id) {
+        trabajadorEsclavisadoRepository.deleteById(id);
+    }
 }

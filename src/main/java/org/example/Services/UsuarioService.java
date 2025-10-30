@@ -1,8 +1,6 @@
 package org.example.Services;
 
-import org.example.Models.AdministradorContenido;
-import org.example.Models.Cliente;
-import org.example.Models.Usuario;
+import org.example.Models.*;
 import org.example.Repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +17,7 @@ public class UsuarioService {
     }
 
     public static void registrarUsuario(List<Usuario> usuarios, Scanner scanner) {
-        System.out.println("\nPara registrarse llene los campos acontinuacion:");
+        System.out.println("\nPara registrarse llene los campos a continuacion:");
         System.out.print("- Nombre: ");
         String nombreIngresado = scanner.nextLine();
         System.out.print("- Correo electronico: ");
@@ -34,12 +32,34 @@ public class UsuarioService {
 
         System.out.print("- Contraseña: ");
         String contrasenaIngresada = scanner.nextLine();
-        System.out.print("- Rol (Cliente / Administrador): ");
-        String rolIngresado = scanner.nextLine();
-        if (!(rolIngresado.equalsIgnoreCase("Cliente") || rolIngresado.equalsIgnoreCase("Administrador"))) {
-            System.out.println("Rol no valido, debe ser Cliente o Administrador");
-            return;
+
+        // Restriccion en base a los roles validos
+        String rolIngresado;
+        String rolSinEspacios;
+        while (true) {
+            System.out.print("- Rol (Cliente / Administrador Contenido / Administrador Usuario / Dueña): ");
+            rolIngresado = scanner.nextLine().trim();
+            rolSinEspacios = rolIngresado.replaceAll("\\s", "").toLowerCase();
+            if (rolSinEspacios.equals("cliente")
+                    || rolSinEspacios.equals("administradorcontenido")
+                    || rolSinEspacios.equals("administradorusuario")
+                    || rolSinEspacios.equals("dueña")
+                    || rolSinEspacios.equals("duenia")) {
+                break;
+            }
+            System.out.println("Rol no valido, debe ser Cliente, Administrador Contenido, Administrador Usuario o Dueña. Por favor, intentelo de nuevo.");
         }
+
+        if (rolSinEspacios.equals("duenia") || rolSinEspacios.equals("dueña")) {
+            for (Usuario usuarioExistente : usuarios) {
+                String rolComparar = usuarioExistente.getRol().replaceAll("\\s", "").toLowerCase();
+                if (rolComparar.equals("duenia") || rolComparar.equals("dueña")) {
+                    System.out.println("Ya existe una Dueña registrada. Solo puede haber una en el sistema.");
+                    return;
+                }
+            }
+        }
+
         System.out.println("\nResumen de datos ingresados:");
         System.out.println("- Nombre ingresado: " + nombreIngresado);
         System.out.println("- Correo electronico ingresado: " + correoIngresado);
@@ -50,13 +70,37 @@ public class UsuarioService {
             System.out.println("Registro cancelado");
             return;
         }
+
         Usuario nuevoUsuario = null;
         UUID idGenerado = UUID.randomUUID();
         Date fechaRegistro = new Date();
-        if (rolIngresado.equalsIgnoreCase("Cliente")) {
-            nuevoUsuario = new Cliente(idGenerado, nombreIngresado, correoIngresado, contrasenaIngresada, rolIngresado, fechaRegistro, true);
-        } else {
-            nuevoUsuario = new AdministradorContenido(idGenerado, nombreIngresado, correoIngresado, contrasenaIngresada, rolIngresado, fechaRegistro, true, "total");
+
+        // Logica en base al rol asignado
+        switch (rolSinEspacios) {
+            case "cliente" ->
+                    nuevoUsuario = new Cliente(idGenerado, nombreIngresado, correoIngresado, contrasenaIngresada, rolIngresado, fechaRegistro, true);
+
+            case "administradorcontenido" -> {
+                // Asignar permisos de edicion
+                boolean permisosEdicion = true;
+                nuevoUsuario = new AdministradorContenido(idGenerado, nombreIngresado, correoIngresado, contrasenaIngresada, rolIngresado, fechaRegistro, true, permisosEdicion);
+            }
+
+            case "administradorusuario" -> {
+                Random random = new Random();
+                int nivelAcceso = random.nextInt(3) + 1;
+                AdministradorUsuario adminUsuario = new AdministradorUsuario(idGenerado, nombreIngresado, correoIngresado, contrasenaIngresada, rolIngresado, fechaRegistro, true, 1); // Asignas temporal, luego setNivelAcceso
+                AdministradorUsuarioService service = new AdministradorUsuarioService();
+                service.setNivelAcceso(adminUsuario, nivelAcceso);
+                nuevoUsuario = adminUsuario;
+                System.out.println("Nivel de acceso asignado al administrador: " + nivelAcceso + "\n(1: suspender usuario, 2: reactivar usuario, 3: ambas)");
+            }
+            case "duenia", "dueña" -> {
+                System.out.print("- Clave maestra: ");
+                String claveMaestra = scanner.nextLine();
+                Date fechaCoronacion = new Date(); // O solicita si se requiere
+                nuevoUsuario = new Duenia(idGenerado, nombreIngresado, correoIngresado, contrasenaIngresada, "Dueña", fechaRegistro, true, claveMaestra, fechaCoronacion);
+            }
         }
         usuarios.add(nuevoUsuario);
         System.out.println("Usuario registrado correctamente");

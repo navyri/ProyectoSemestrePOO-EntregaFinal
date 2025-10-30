@@ -10,8 +10,7 @@ public class Producto {
 
     // ATRIBUTOS
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)//par Long o Integer
-    @GeneratedValue(strategy = GenerationType.AUTO) //Este es para UUID
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private String nombre;
     private String descripcion;
@@ -69,11 +68,19 @@ public class Producto {
         this.stock = stock;
     }
 
-    public Date getFechaLanzamiento() { return fechaLanzamiento; }
+    public Date getFechaLanzamiento() {
+        return fechaLanzamiento;
+    }
 
-    public void setFechaLanzamiento(Date fechaLanzamiento) { this.fechaLanzamiento = fechaLanzamiento; }
+    public void setFechaLanzamiento(Date fechaLanzamiento) {
+        this.fechaLanzamiento = fechaLanzamiento;
+    }
 
-    public Categoria getCategoria() { return categoria; }
+    public Categoria getCategoria() {
+        return categoria;
+    }
 
-    public void setCategoria(Categoria categoria) { this.categoria = categoria; }
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
 }

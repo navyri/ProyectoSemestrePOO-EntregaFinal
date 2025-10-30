@@ -1,6 +1,7 @@
 package org.example.Models;
 
 import jakarta.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "linea_carrito")
@@ -8,8 +9,8 @@ public class LineaCarrito {
 
     // ATRIBUTOS
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
     private int cantidad;
     private double subtotal;
 
