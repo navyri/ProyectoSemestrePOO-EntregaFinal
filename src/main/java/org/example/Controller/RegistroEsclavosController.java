@@ -24,10 +24,8 @@ public class RegistroEsclavosController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RegistroEsclavos> getById(@PathVariable Long id) {
-        Optional<RegistroEsclavos> registro = service.findById(id);
-        return registro.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public RegistroEsclavos getById(@PathVariable Long id) {
+        return service.findById(id);
     }
 
     @PostMapping
@@ -36,20 +34,8 @@ public class RegistroEsclavosController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RegistroEsclavos> update(@PathVariable Long id, @RequestBody RegistroEsclavos rDetalles) {
-        Optional<RegistroEsclavos> optionalRegistro = service.findById(id);
-
-        if (optionalRegistro.isPresent()) {
-            RegistroEsclavos existingRegistro = optionalRegistro.get();
-            existingRegistro.setUltimoAcceso(rDetalles.getUltimoAcceso());
-            existingRegistro.setNivelCifrado(rDetalles.getNivelCifrado());
-            existingRegistro.setTrabajadores(rDetalles.getTrabajadores());
-            existingRegistro.setDuenia(rDetalles.getDuenia());
-
-            return ResponseEntity.ok(service.save(existingRegistro));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public RegistroEsclavos update(@PathVariable Long id, @RequestBody RegistroEsclavos rDetalles) {
+        return service.update(id, rDetalles);
     }
 
     @DeleteMapping("/{id}")

@@ -13,7 +13,6 @@ public class AdministradorContenido extends Usuario {
 
     private boolean permisosEdicion;
 
-    @ManyToMany(mappedBy = "administradoresContenido")
     private List<ConsejoSombrio> consejos;
 
     public AdministradorContenido() {

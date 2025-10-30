@@ -18,8 +18,6 @@ public class TrabajadorEsclavisado {
     private Date fechaCaptura;
     private int salud;
 
-    @ManyToOne
-    @JoinColumn(name="frabrica_id")
     private Fabrica asignadoA;
 
     // CONSTRUCTOR
@@ -33,8 +31,6 @@ public class TrabajadorEsclavisado {
         this.asignadoA = asignadoA;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "registro_id")
     private RegistroEsclavos registro;
 
     protected TrabajadorEsclavisado() {

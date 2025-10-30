@@ -6,7 +6,6 @@ import org.example.Models.Producto;
 import org.example.Services.AdministradorContenidoService;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -43,7 +42,7 @@ public class AdministradorContenidoController {
     }
 
     @GetMapping("/producto/{id}")
-    public Optional<Producto> obtenerProductoPorId(@PathVariable UUID id) {
+    public Producto obtenerProductoPorId(@PathVariable UUID id) {
         return objAdministradorContenido.obtenerProductoPorId(id);
     }
 

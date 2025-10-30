@@ -25,7 +25,7 @@ public class DueniaController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Duenia> getById(@PathVariable Long id) { return objDuenia.findById(id); }
+    public Duenia getById(@PathVariable Long id) { return objDuenia.findById(id).orElseThrow(()-> new RuntimeException("Duenia no encontrada con el id: "+ id)); }
 
     @PostMapping
     public Duenia create(@RequestBody Duenia d) { return objDuenia.save(d); }

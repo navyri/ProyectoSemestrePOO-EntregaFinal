@@ -14,7 +14,7 @@ public class Duenia {
     private String claveMaestra;
     private Date fechaCoronacion;
 
-    @OneToMany(mappedBy = "duenia", cascade = CascadeType.ALL, orphanRemoval = true)
+
     private List<RegistroEsclavos> registros;
 
     // CONSTRUCTOR

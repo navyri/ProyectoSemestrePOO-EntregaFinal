@@ -16,11 +16,8 @@ public class RegistroEsclavos {
     private Date ultimoAcceso;
     private String nivelCifrado;
 
-    @OneToMany(mappedBy = "registro", cascade = CascadeType.ALL)
     private List<TrabajadorEsclavisado> trabajadorEsclavisadoList;
 
-    @ManyToOne
-    @JoinColumn(name="duenia_id")
     private Duenia cabrita;
 
     // CONSTRUCTOR

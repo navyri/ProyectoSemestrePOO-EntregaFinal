@@ -61,4 +61,6 @@ public class ProductoService {
             }
         }
     }
+
+    public Producto findById(UUID id){return productoRepository.findById(id).orElseThrow(() ->new RuntimeException("No se encontro producto con el id: "+id));}
 }

@@ -15,7 +15,6 @@ public class AdministradorUsuario extends Usuario {
 
     private int nivelAcceso;
 
-    @ManyToMany(mappedBy = "administradoresUsuario")
     private List<ConsejoSombrio> consejos;
 
     public AdministradorUsuario() {

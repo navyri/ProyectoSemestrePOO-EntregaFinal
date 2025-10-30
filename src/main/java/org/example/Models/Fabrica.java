@@ -16,12 +16,9 @@ public class Fabrica {
     private String pais;
     private String cuidad;
     private int capacidad;
-
-    @OneToMany(mappedBy = "asignadoA", cascade = CascadeType.ALL)
+    
     private List<TrabajadorEsclavisado> trabajadorEsclavisadoList;
 
-    @ManyToOne
-    @JoinColumn(name = "duenia_id")
     private Duenia duenia;
 
     // CONSTRUCTOR
