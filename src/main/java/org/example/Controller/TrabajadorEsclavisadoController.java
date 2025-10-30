@@ -24,45 +24,18 @@ public class TrabajadorEsclavisadoController {
         return objTrabajadorEsclavisado.getAllTrabajadorEsclavisado();
     }
 
-
     @GetMapping("/{id}")
-    public Optional<TrabajadorEsclavisado> getById(@PathVariable UUID id) {
-        return objTrabajadorEsclavisado.findById(id);
-    }
+    public TrabajadorEsclavisado getById(@PathVariable UUID id) { return objTrabajadorEsclavisado.findById(id); }
 
     @PostMapping
-    public TrabajadorEsclavisado create(@RequestBody TrabajadorEsclavisado t) {
-        return objTrabajadorEsclavisado.save(t);
-    }
+    public TrabajadorEsclavisado create(@RequestBody TrabajadorEsclavisado t) { return objTrabajadorEsclavisado.save(t); }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TrabajadorEsclavisado> update(@PathVariable UUID id, @RequestBody TrabajadorEsclavisado tDetails) {
-
-        Optional<TrabajadorEsclavisado> optionalT = objTrabajadorEsclavisado.findById(id);
-
-        if (optionalT.isPresent()) {
-            TrabajadorEsclavisado existingT = optionalT.get();
-
-            // Copiamos los campos del objeto de la peticion (tDetails) al objeto existente
-            existingT.setNombre(tDetails.getNombre());
-            existingT.setPaisOrigen(tDetails.getPaisOrigen());
-            existingT.setEdad(tDetails.getEdad());
-            existingT.setFechaCaptura(tDetails.getFechaCaptura());
-            existingT.setSalud(tDetails.getSalud());
-            existingT.setAsignadoA(tDetails.getAsignadoA());
-            existingT.setRegistro(tDetails.getRegistro());
-
-            // Guardamos la entidad existente actualizada
-            return ResponseEntity.ok(objTrabajadorEsclavisado.save(existingT));
-        } else {
-            // Si no se encuentra, devuelve 404
-            return ResponseEntity.notFound().build();
-        }
+    public TrabajadorEsclavisado update(@PathVariable UUID id, @RequestBody TrabajadorEsclavisado tDetails) {
+        return objTrabajadorEsclavisado.update(id, tDetails);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id) {
-        objTrabajadorEsclavisado.delete(id);
-    }
+    public void delete(@PathVariable UUID id) { objTrabajadorEsclavisado.delete(id); }
 }
 

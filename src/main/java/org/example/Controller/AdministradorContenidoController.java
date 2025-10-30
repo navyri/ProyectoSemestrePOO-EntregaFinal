@@ -4,6 +4,7 @@ import org.example.Models.AdministradorContenido;
 import org.example.Models.Categoria;
 import org.example.Models.Producto;
 import org.example.Services.AdministradorContenidoService;
+import org.example.Services.CategoriaService;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
@@ -14,7 +15,7 @@ import java.util.UUID;
 public class AdministradorContenidoController {
 
     private AdministradorContenidoService objAdministradorContenido;
-
+    private CategoriaService objCategoriaService;
     @GetMapping
     public List<AdministradorContenido> getAll() {
         return objAdministradorContenido.getAllAdministradoresContenido();
@@ -45,5 +46,6 @@ public class AdministradorContenidoController {
     public Producto obtenerProductoPorId(@PathVariable UUID id) {
         return objAdministradorContenido.obtenerProductoPorId(id);
     }
+
 
 }

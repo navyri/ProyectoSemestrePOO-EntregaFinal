@@ -21,7 +21,7 @@ public class FabricaController {
 
 
     @GetMapping("/{id}")
-    public Optional<Fabrica> getById(@PathVariable UUID id) {
+    public Fabrica getById(@PathVariable UUID id) {
         return objFabrica.findById(id);
     }
 

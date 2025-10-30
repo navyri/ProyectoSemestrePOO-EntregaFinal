@@ -16,8 +16,8 @@ public class DueniaService {
         return dueniaRepository.findAll();
     }
 
-    public Optional<Duenia> findById(UUID id) {
-        return dueniaRepository.findById(id);
+    public Duenia findById(UUID id) {
+        return dueniaRepository.findById(id).orElseThrow(()->new RuntimeException("No se encontro una duenia cone l id"+id));
     }
 
     public Duenia save(Duenia d) {
@@ -41,6 +41,6 @@ public class DueniaService {
             duenia.setFechaCoronacion(dueniaActualizada.getFechaCoronacion());
             duenia.setRegistros(dueniaActualizada.getRegistros());
             return dueniaRepository.save(duenia);
-        }).orElse(null);
+        }).orElseThrow(()-> new RuntimeException("No se pudo actualizar la duenia correctamente "));
     }
 }
