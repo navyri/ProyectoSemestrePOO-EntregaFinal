@@ -15,21 +15,7 @@ public class ConsejoSombrio {
     private UUID id;
     private String nombreClave;
 
-    @ManyToMany
-    @JoinTable(
-            name = "consejo_admin_contenido",
-            joinColumns = @JoinColumn(name = "consejo_id"),
-            inverseJoinColumns = @JoinColumn(name = "admin_contenido_id")
-    )
-
     private List<AdministradorContenido> administradorContenidos;
-
-    @ManyToMany
-    @JoinTable(
-            name = "consejo_admin_usuario",
-            joinColumns = @JoinColumn(name = "consejo_id"),
-            inverseJoinColumns = @JoinColumn(name = "admin_usuario_id")
-    )
 
     private List<AdministradorUsuario> administradorUsuarios;
 

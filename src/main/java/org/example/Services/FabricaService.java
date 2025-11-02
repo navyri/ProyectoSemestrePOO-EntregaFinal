@@ -16,8 +16,8 @@ public class FabricaService {
         return fabricaRepository.findAll();
     }
 
-    public Optional<Fabrica> findById(UUID id) {
-        return fabricaRepository.findById(id);
+    public Fabrica findById(UUID id) {
+        return fabricaRepository.findById(id).orElseThrow(()->new RuntimeException("No se pudo encontrar la fabrica con id: "+id));
     }
 
     public Fabrica save(Fabrica f) {

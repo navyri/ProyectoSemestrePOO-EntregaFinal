@@ -76,8 +76,8 @@ public class AdministradorContenidoService {
         }
     }
 
-    public Optional<Producto> obtenerProductoPorId(UUID id) {
-        return productoRepository.findById(id);
+    public Producto obtenerProductoPorId(UUID id) {
+        return productoRepository.findById(id).orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
     }
 
 }
