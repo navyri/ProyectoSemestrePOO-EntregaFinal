@@ -15,8 +15,10 @@ public class ConsejoSombrio {
     private UUID id;
     private String nombreClave;
 
+    @ManyToMany
     private List<AdministradorContenido> administradorContenidos;
 
+    @ManyToMany(mappedBy = "consejos")
     private List<AdministradorUsuario> administradorUsuarios;
 
     // CONSTRUCTOR

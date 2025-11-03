@@ -9,7 +9,6 @@ import org.example.Repositories.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -18,11 +17,11 @@ public class AdministradorContenidoService {
     @Autowired
     private AdministradorContenidoRepository administradorContenidoRepository;
 
-    //permititra hacer crud dentro de producto
+    // Permitira hacer CRUD dentro de producto
     @Autowired
     private ProductoRepository productoRepository;
 
-    //permitira hacer crud dentro de categoria
+    // Permitira hacer CRUD dentro de categoria
     @Autowired
     private CategoriaRepository categoriaRepository;
 
@@ -30,50 +29,44 @@ public class AdministradorContenidoService {
         return administradorContenidoRepository.findAll();
     }
 
-    //listar productos
+    // Listar productos
     public List<Producto> listarProductos() {
         return productoRepository.findAll();
     }
 
     public Producto agregarProducto(AdministradorContenido admin, Producto producto) {
-        // Logica para agregar producto
-        if ((admin.getPermisosEdicion() == false)) {
+        if (!admin.getPermisosEdicion()) {
             throw new IllegalStateException("El administrador no tiene permisos de edicion.");
-        }else{
-            return productoRepository.save(producto);
         }
+        return productoRepository.save(producto);
     }
 
     public void eliminarProducto(AdministradorContenido admin, Producto producto) {
-        // Logica para eliminar producto
-        if (admin.getPermisosEdicion() ==false) {
+        if (!admin.getPermisosEdicion()) {
             throw new IllegalStateException("El administrador no tiene permisos de edicion.");
         }
         productoRepository.delete(producto);
     }
 
     public void eliminarProductoID(AdministradorContenido admin, UUID productoId) {
-        if (admin.getPermisosEdicion() == false) {
+        if (!admin.getPermisosEdicion()) {
             throw new IllegalStateException("El administrador no tiene permisos de edicion.");
-        } else {
-            productoRepository.deleteById(productoId);
         }
+        productoRepository.deleteById(productoId);
     }
 
     public Producto actualizarProducto(AdministradorContenido admin, Producto producto) {
-        if (admin.getPermisosEdicion() == false) {
+        if (!admin.getPermisosEdicion()) {
             throw new IllegalStateException("El administrador no tiene permisos de edicion.");
-        }else{
-            return productoRepository.save(producto);
         }
+        return productoRepository.save(producto);
     }
 
     public Categoria gestionarCategorias(AdministradorContenido admin, Categoria categoria) {
-        if (admin.getPermisosEdicion() == false) {
+        if (!admin.getPermisosEdicion()) {
             throw new IllegalStateException("El administrador no tiene permisos de edicion.");
-        } else {
-            return categoriaRepository.save(categoria);
         }
+        return categoriaRepository.save(categoria);
     }
 
     public Producto obtenerProductoPorId(UUID id) {

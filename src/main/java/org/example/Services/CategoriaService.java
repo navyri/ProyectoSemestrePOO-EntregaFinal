@@ -33,7 +33,7 @@ public class CategoriaService {
 
     public void eliminarProducto(Categoria categoria, Producto p) {
         if (!categoria.getProducto().contains(p)) {
-            throw new RuntimeException("El producto no pertenece a esta categoría");
+            throw new RuntimeException("El producto no pertenece a esta categoria");
         }
         categoria.getProducto().remove(p);
     }

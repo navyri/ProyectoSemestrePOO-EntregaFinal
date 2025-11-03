@@ -16,9 +16,11 @@ public class Fabrica {
     private String pais;
     private String cuidad;
     private int capacidad;
-    
+
+    @OneToMany(mappedBy = "asignadoA", fetch = FetchType.EAGER)
     private List<TrabajadorEsclavisado> trabajadorEsclavisadoList;
 
+    @ManyToOne
     private Duenia duenia;
 
     // CONSTRUCTOR

@@ -1,12 +1,15 @@
 package org.example.Services;
 
+import org.example.Models.Duenia;
 import org.example.Models.Usuario;
 import org.example.Models.AdministradorUsuario;
 import org.example.Repositories.AdministradorUsuarioRepository;
+import org.example.Repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 @Service
 public class AdministradorUsuarioService {
@@ -14,50 +17,119 @@ public class AdministradorUsuarioService {
     @Autowired
     private AdministradorUsuarioRepository administradorUsuarioRepository;
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
     public List<AdministradorUsuario> getAllAdministradoresUsuario() {
         return administradorUsuarioRepository.findAll();
     }
 
-    public static void suspenderUsuario(List<Usuario> usuarios, Scanner scanner, Usuario usuarioActivo) {
-        if (!(usuarioActivo instanceof AdministradorUsuario adminUser)) {
+    public AdministradorUsuario crearAdministrador(AdministradorUsuario admin) {
+        return administradorUsuarioRepository.save(admin);
+    }
+
+    public AdministradorUsuario actualizarAdministrador(AdministradorUsuario datosActualizados) {
+        return administradorUsuarioRepository.save(datosActualizados);
+    }
+
+    public void eliminarAdministrador(UUID adminId) {
+        administradorUsuarioRepository.deleteById(adminId);
+    }
+
+    public Usuario buscarUsuarioPorEmail(String email) {
+        return usuarioRepository.findAll()
+                .stream()
+                .filter(u -> u.getEmail().equalsIgnoreCase(email))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public boolean suspenderUsuario(String email, AdministradorUsuario usuarioActivo) {
+        if (!(usuarioActivo instanceof AdministradorUsuario)) {
+            return false;
+        }
+        AdministradorUsuario adminUser = (AdministradorUsuario) usuarioActivo;
+        if (!adminUser.getNivelAcceso()) {
+            return false;
+        }
+        Usuario usuarioSuspendido = buscarUsuarioPorEmail(email);
+        if (usuarioSuspendido == null) {
+            return false;
+        }
+        if (usuarioSuspendido instanceof Duenia) {
+            return false;
+        }
+        if (!usuarioSuspendido.isEstadoCuenta()) {
+            return false;
+        }
+        usuarioSuspendido.setEstadoCuenta(false);
+        usuarioRepository.save(usuarioSuspendido);
+        return true;
+    }
+
+    public boolean reactivarUsuario(String email, AdministradorUsuario usuarioActivo) {
+        if (!(usuarioActivo instanceof AdministradorUsuario)) {
+            return false;
+        }
+        AdministradorUsuario adminUser = (AdministradorUsuario) usuarioActivo;
+        if (!adminUser.getNivelAcceso()) {
+            return false;
+        }
+        Usuario usuarioReactivar = buscarUsuarioPorEmail(email);
+        if (usuarioReactivar == null) {
+            return false;
+        }
+        if (usuarioReactivar.isEstadoCuenta()) {
+            return false;
+        }
+        usuarioReactivar.setEstadoCuenta(true);
+        usuarioRepository.save(usuarioReactivar);
+        return true;
+    }
+
+    public void suspenderUsuario(Scanner scanner, Usuario usuarioActivo) {
+        if (!(usuarioActivo instanceof AdministradorUsuario)) {
             System.out.println("Acceso denegado. Solo administradores usuario pueden suspender cuentas.");
             return;
         }
-        if (adminUser.getNivelAcceso() != 1 && adminUser.getNivelAcceso() != 3) {
-            System.out.println("Este administrador no tiene permiso para suspender usuarios.");
+        AdministradorUsuario adminUser = (AdministradorUsuario) usuarioActivo;
+        if (!adminUser.getNivelAcceso()) {
+            System.out.println("No tienes permiso para suspender o reactivar usuarios.");
             return;
         }
         System.out.print("Ingrese el correo del usuario a suspender: ");
         String correoSuspender = scanner.nextLine().trim();
-        Usuario usuarioSuspender = usuarios.stream()
-                .filter(u -> u.getEmail().equalsIgnoreCase(correoSuspender))
-                .findFirst().orElse(null);
-        if (usuarioSuspender == null) {
+        Usuario usuarioSuspendido = buscarUsuarioPorEmail(correoSuspender);
+        if (usuarioSuspendido == null) {
             System.out.println("Usuario no encontrado.");
             return;
         }
-        if (!usuarioSuspender.isEstadoCuenta()) {
+        if (usuarioSuspendido instanceof Duenia) {
+            System.out.println("No puedes suspender a la dueña. Permiso denegado.");
+            return;
+        }
+        if (!usuarioSuspendido.isEstadoCuenta()) {
             System.out.println("El usuario ya esta suspendido.");
         } else {
-            usuarioSuspender.setEstadoCuenta(false);
+            usuarioSuspendido.setEstadoCuenta(false);
+            usuarioRepository.save(usuarioSuspendido);
             System.out.println("El usuario ha sido suspendido correctamente.");
         }
     }
 
-    public static void reactivarUsuario(List<Usuario> usuarios, Scanner scanner, Usuario usuarioActivo) {
-        if (!(usuarioActivo instanceof AdministradorUsuario adminUser)) {
+    public void reactivarUsuario(Scanner scanner, Usuario usuarioActivo) {
+        if (!(usuarioActivo instanceof AdministradorUsuario)) {
             System.out.println("Acceso denegado. Solo administradores usuario pueden reactivar cuentas.");
             return;
         }
-        if (adminUser.getNivelAcceso() != 2 && adminUser.getNivelAcceso() != 3) {
-            System.out.println("Este administrador no tiene permiso para reactivar usuarios.");
+        AdministradorUsuario adminUser = (AdministradorUsuario) usuarioActivo;
+        if (!adminUser.getNivelAcceso()) {
+            System.out.println("No tienes permiso para suspender o reactivar usuarios.");
             return;
         }
         System.out.print("Ingrese el correo del usuario a reactivar: ");
         String correoReactivar = scanner.nextLine().trim();
-        Usuario usuarioReactivar = usuarios.stream()
-                .filter(u -> u.getEmail().equalsIgnoreCase(correoReactivar))
-                .findFirst().orElse(null);
+        Usuario usuarioReactivar = buscarUsuarioPorEmail(correoReactivar);
         if (usuarioReactivar == null) {
             System.out.println("Usuario no encontrado.");
             return;
@@ -66,31 +138,8 @@ public class AdministradorUsuarioService {
             System.out.println("El usuario ya esta activo.");
         } else {
             usuarioReactivar.setEstadoCuenta(true);
+            usuarioRepository.save(usuarioReactivar);
             System.out.println("El usuario ha sido reactivado correctamente.");
         }
-    }
-
-    public void setNivelAcceso(AdministradorUsuario admin, int nivelAcceso) {
-        if(nivelAcceso < 1 || nivelAcceso > 3){
-            System.out.println("Nivel de acceso invalido. Debe estar entre 1 y 3.");
-            // 1 = Puede suspender usuario
-            // 2 = Puede reactivar usuario
-            // 3 = Puede suspender y reactivar usuarios
-            return;
-        }
-        admin.setNivelAcceso(nivelAcceso);
-    }
-
-    public AdministradorUsuario crearAdministrador(AdministradorUsuario admin) {
-        return administradorUsuarioRepository.save(admin);
-    }
-
-    public AdministradorUsuario actualizarAdministrador(AdministradorUsuario datosActualizados) {
-        datosActualizados.setNivelAcceso(datosActualizados.getNivelAcceso());
-        return administradorUsuarioRepository.save(datosActualizados);
-    }
-
-    public void eliminarAdministrador(AdministradorUsuario admin){
-        administradorUsuarioRepository.delete(admin);
     }
 }

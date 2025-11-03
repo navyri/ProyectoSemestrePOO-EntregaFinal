@@ -13,6 +13,7 @@ public class AdministradorContenido extends Usuario {
 
     private boolean permisosEdicion;
 
+    @ManyToMany(mappedBy = "administradorContenidos")
     private List<ConsejoSombrio> consejos;
 
     public AdministradorContenido() {
@@ -40,8 +41,7 @@ public class AdministradorContenido extends Usuario {
         this.consejos = consejos;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "admin_contenido_id")
+    @ManyToMany
     private List<Producto> producto;
 
     public List<Producto> getProductos() {

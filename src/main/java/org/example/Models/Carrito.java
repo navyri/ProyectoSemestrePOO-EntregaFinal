@@ -15,7 +15,11 @@ public class Carrito {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private Date fechaCreacion;
+
+    @ManyToMany
     private List<Producto> producto;
+
+    @OneToMany
     private List<LineaCarrito> lineaCarritos;
 
     // CONSTRUCTOR

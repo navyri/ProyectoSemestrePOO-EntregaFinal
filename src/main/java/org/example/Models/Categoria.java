@@ -14,6 +14,8 @@ public class Categoria {
     private UUID id;
     private String nombre;
     private String descripcion;
+
+    @OneToMany(mappedBy = "categoria")
     private List<Producto> producto;
 
     // CONSTRUCTOR
