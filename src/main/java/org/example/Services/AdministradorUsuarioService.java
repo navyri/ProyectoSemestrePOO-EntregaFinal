@@ -7,6 +7,8 @@ import org.example.Repositories.AdministradorUsuarioRepository;
 import org.example.Repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.swing.*;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
@@ -116,6 +118,35 @@ public class AdministradorUsuarioService {
             System.out.println("El usuario ha sido suspendido correctamente.");
         }
     }
+    //Metodo Suspender Usuario Interfaz
+    public void suspenderUsuarioInterfaz(Usuario usuarioActivo) {
+        if (!(usuarioActivo instanceof AdministradorUsuario)) {
+            JOptionPane.showMessageDialog(null,"Acceso denegado. Solo administradores usuario pueden suspender cuentas.");
+            return;
+        }
+        AdministradorUsuario adminUser = (AdministradorUsuario) usuarioActivo;
+        if (!adminUser.getNivelAcceso()) {
+            JOptionPane.showMessageDialog(null,"No tienes permiso para suspender o reactivar usuarios.");
+            return;
+        }
+        String correoSuspender = JOptionPane.showInputDialog("Ingrese el correo del usuario a suspender: ").trim();
+        Usuario usuarioSuspendido = buscarUsuarioPorEmail(correoSuspender);
+        if (usuarioSuspendido == null) {
+            JOptionPane.showMessageDialog(null,"Usuario no encontrado.");
+            return;
+        }
+        if (usuarioSuspendido instanceof Duenia) {
+            JOptionPane.showMessageDialog(null,"No puedes suspender a la dueña. Permiso denegado.");
+            return;
+        }
+        if (!usuarioSuspendido.isEstadoCuenta()) {
+            JOptionPane.showMessageDialog(null,"El usuario ya esta suspendido.");
+        } else {
+            usuarioSuspendido.setEstadoCuenta(false);
+            usuarioRepository.save(usuarioSuspendido);
+            JOptionPane.showMessageDialog(null,"El usuario ha sido suspendido correctamente.");
+        }
+    }
 
     public void reactivarUsuario(Scanner scanner, Usuario usuarioActivo) {
         if (!(usuarioActivo instanceof AdministradorUsuario)) {
@@ -140,6 +171,33 @@ public class AdministradorUsuarioService {
             usuarioReactivar.setEstadoCuenta(true);
             usuarioRepository.save(usuarioReactivar);
             System.out.println("El usuario ha sido reactivado correctamente.");
+        }
+    }
+
+    //METODDO REACTIVAR USUARIO INTERFAZ
+    public void reactivarUsuarioInterfaz(Usuario usuarioActivo) {
+        if (!(usuarioActivo instanceof AdministradorUsuario)) {
+            JOptionPane.showMessageDialog(null,"Acceso denegado. Solo administradores usuario pueden reactivar cuentas.");
+            return;
+        }
+        AdministradorUsuario adminUser = (AdministradorUsuario) usuarioActivo;
+        if (!adminUser.getNivelAcceso()) {
+            JOptionPane.showMessageDialog(null,"No tienes permiso para suspender o reactivar usuarios.");
+            return;
+        }
+
+        String correoReactivar = JOptionPane.showInputDialog("Ingrese el correo del usuario a reactivar: ").trim();
+        Usuario usuarioReactivar = buscarUsuarioPorEmail(correoReactivar);
+        if (usuarioReactivar == null) {
+            JOptionPane.showMessageDialog(null,"Usuario no encontrado.");
+            return;
+        }
+        if (usuarioReactivar.isEstadoCuenta()) {
+            JOptionPane.showMessageDialog(null,"El usuario ya esta activo.");
+        } else {
+            usuarioReactivar.setEstadoCuenta(true);
+            usuarioRepository.save(usuarioReactivar);
+            JOptionPane.showMessageDialog(null,"El usuario ha sido reactivado correctamente.");
         }
     }
 }

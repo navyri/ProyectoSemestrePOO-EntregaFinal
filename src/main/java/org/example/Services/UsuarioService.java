@@ -4,6 +4,8 @@ import org.example.Models.*;
 import org.example.Repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.swing.*;
 import java.util.*;
 
 @Service
@@ -104,6 +106,89 @@ public class UsuarioService {
         System.out.println("Usuario registrado correctamente");
     }
 
+    //METODO REGISTRAR USUARIO PARA LA INTERFAZ
+    public void registrarUsuarioInterfaz() {
+        JOptionPane.showMessageDialog(null,"Para registrarse llene los campos a continuacion:");
+        String nombreIngresado = JOptionPane.showInputDialog("- Nombre: ");
+        String correoIngresado = JOptionPane.showInputDialog("- Correo electronico: ");
+
+        for (Usuario usuarioExistente : usuarioRepository.findAll()) {
+            if (usuarioExistente.getEmail().equalsIgnoreCase(correoIngresado)) {
+                JOptionPane.showMessageDialog(null,"Ya existe un usuario registrado con ese correo electronico");
+                return;
+            }
+        }
+
+        String contrasenaIngresada = JOptionPane.showInputDialog("- Contraseña: ");
+
+        // Restriccion con base en los roles validos
+        String rolIngresado;
+        String rolSinEspacios;
+        while (true) {
+            JOptionPane.showMessageDialog(null,"- Rol (Cliente / Administrador Contenido / Administrador Usuario / Dueña): ");
+            rolIngresado =JOptionPane.showInputDialog(null, "Ingrese el rol").trim();
+            rolSinEspacios = rolIngresado.replaceAll("\\s", "").toLowerCase();
+            if (rolSinEspacios.equals("cliente")
+                    || rolSinEspacios.equals("administradorcontenido")
+                    || rolSinEspacios.equals("administradorusuario")
+                    || rolSinEspacios.equals("dueña")
+                    || rolSinEspacios.equals("duenia")) {
+                break;
+            }
+            JOptionPane.showMessageDialog(null,"Rol no valido, debe ser Cliente, Administrador Contenido, Administrador Usuario o Dueña. Por favor, intentelo de nuevo.");
+        }
+
+        if (rolSinEspacios.equals("duenia") || rolSinEspacios.equals("dueña")) {
+            for (Usuario usuarioExistente : usuarioRepository.findAll()) {
+                String rolComparar = usuarioExistente.getRol().replaceAll("\\s", "").toLowerCase();
+                if (rolComparar.equals("duenia") || rolComparar.equals("dueña")) {
+                    JOptionPane.showMessageDialog(null,"Ya existe una Dueña registrada. Solo puede haber una en el sistema.");
+                    return;
+                }
+            }
+        }
+        String mensaje= "\n"+"-Nombre ingresado: "+ nombreIngresado +"\n"+
+                "-Correo Ingresado: "+ nombreIngresado +"\n" +"-Rol elegido: "+ rolIngresado;
+        JOptionPane.showMessageDialog(null,"Resumen de datos ingresados: "+mensaje);
+
+        String confirmacion=JOptionPane.showInputDialog("¿Desea registrar el usuario con estos datos? (Si/No): ");
+
+        if (!confirmacion.equalsIgnoreCase("Si")) {
+            JOptionPane.showMessageDialog(null,"Registro cancelado");
+            return;
+        }
+
+        Usuario nuevoUsuario = null;
+        UUID idGenerado = UUID.randomUUID();
+        Date fechaRegistro = new Date();
+
+        // Logica basandonos en el rol asignado
+        switch (rolSinEspacios) {
+            case "cliente" ->
+                    nuevoUsuario = new Cliente(idGenerado, nombreIngresado, correoIngresado, contrasenaIngresada, rolIngresado, fechaRegistro, true);
+
+            case "administradorcontenido" -> {
+                boolean permisosEdicion = true;
+                nuevoUsuario = new AdministradorContenido(idGenerado, nombreIngresado, correoIngresado, contrasenaIngresada, rolIngresado, fechaRegistro, true, permisosEdicion);
+            }
+
+            case "administradorusuario" -> {
+                String accesoTotal = JOptionPane.showInputDialog("- ¿Nivel de acceso total? (Si/No): ").trim();
+                boolean nivelAcceso = accesoTotal.equalsIgnoreCase("si");
+                nuevoUsuario = new AdministradorUsuario(idGenerado, nombreIngresado, correoIngresado, contrasenaIngresada, rolIngresado, fechaRegistro, true, nivelAcceso);
+                JOptionPane.showMessageDialog(null,"Nivel de acceso asignado al administrador: " + (nivelAcceso ? "Total" : "Sin permisos"));
+            }
+
+            case "duenia", "dueña" -> {
+                String claveMaestra =JOptionPane.showInputDialog("- Clave maestra: ").replace(" ","");
+                Date fechaCoronacion = new Date();
+                nuevoUsuario = new Duenia(idGenerado, nombreIngresado, correoIngresado, contrasenaIngresada, "Dueña", fechaRegistro, true, claveMaestra, fechaCoronacion);
+            }
+        }
+        usuarioRepository.save(nuevoUsuario);
+        JOptionPane.showMessageDialog(null,"Usuario registrado correctamente");
+    }
+
     public void listarUsuarios() {
         List<Usuario> usuarios = usuarioRepository.findAll();
         if (usuarios.isEmpty()) {
@@ -122,6 +207,7 @@ public class UsuarioService {
             }
         }
     }
+
 
     public Usuario iniciarSesion(Scanner scanner) {
         while (true) {
@@ -150,12 +236,47 @@ public class UsuarioService {
         }
     }
 
+    //METODO INICIAR SESION INTERFAZ
+    public Usuario iniciarSesionInterfaz(){
+        while (true) {
+            JOptionPane.showMessageDialog(null,"\nPor favor ingrese sus credenciales:");
+            String correo =JOptionPane.showInputDialog("- Correo: ");
+            String contrasena = JOptionPane.showInputDialog("- Contraseña: ");
+
+            for (Usuario usuario : usuarioRepository.findAll()) {
+                if (
+                        usuario.getEmail().equalsIgnoreCase(correo)
+                                && usuario.getPasswordHash().equals(contrasena)
+                                && usuario.isEstadoCuenta()
+                ) {
+                    JOptionPane.showMessageDialog(null,"Inicio de sesion exitoso");
+                    return usuario;
+                }
+            }
+            JOptionPane.showMessageDialog(null,"Credenciales incorrectas o cuenta inactiva");
+            String respuesta =JOptionPane.showInputDialog("¿Desea intentar nuevamente? (Si/No): ");
+            if (!respuesta.equalsIgnoreCase("Si")) {
+                return null;
+            }
+        }
+    }
+
     public static Usuario cerrarSesion(Usuario usuarioActivo) {
         if (usuarioActivo == null) {
             System.out.println("No hay usuario autenticado actualmente");
             return null;
         }
         System.out.println("Su sesion ha sido cerrada exitosamente");
+        return null;
+    }
+
+    //Metodo cerrar sesion interfaz
+    public static Usuario cerrarSesionInterfaz(Usuario usuarioActivo) {
+        if (usuarioActivo == null) {
+            JOptionPane.showMessageDialog(null,"No hay usuario autenticado actualmente");
+            return null;
+        }
+        JOptionPane.showMessageDialog(null,"Su sesion ha sido cerrada exitosamente");
         return null;
     }
 }
