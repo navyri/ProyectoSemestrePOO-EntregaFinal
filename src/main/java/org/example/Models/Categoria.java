@@ -10,10 +10,12 @@ public class Categoria {
 
     // ATRIBUTOS
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private String nombre;
     private String descripcion;
+
+    @OneToMany(mappedBy = "categoria")
     private List<Producto> producto;
 
     // CONSTRUCTOR
@@ -54,6 +56,14 @@ public class Categoria {
 
     public String getDescripcion() {
         return this.descripcion;
+    }
+
+    public List<Producto> getProductos() {
+        return producto;
+    }
+
+    public void setProductos(List<Producto> productos) {
+        this.producto = productos;
     }
 
 }

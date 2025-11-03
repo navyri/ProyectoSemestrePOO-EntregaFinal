@@ -17,5 +17,4 @@ public class CompraController {
     public List<Compra> getAll() {
         return objCompra.getAllCompra();
     }
-
 }

@@ -11,17 +11,16 @@ public class Fabrica {
 
     // ATRIBUTOS
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private String pais;
     private String cuidad;
     private int capacidad;
 
-    @OneToMany(mappedBy = "asignadoA", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "asignadoA", fetch = FetchType.EAGER)
     private List<TrabajadorEsclavisado> trabajadorEsclavisadoList;
 
     @ManyToOne
-    @JoinColumn(name = "duenia_id")
     private Duenia duenia;
 
     // CONSTRUCTOR
@@ -70,10 +69,19 @@ public class Fabrica {
         this.capacidad = capacidad;
     }
 
-    public List<TrabajadorEsclavisado> getTrabajadores(){return trabajadorEsclavisadoList;}
+    public List<TrabajadorEsclavisado> getTrabajadores() {
+        return trabajadorEsclavisadoList;
+    }
 
-    public void setTrabajadorEsclavizado(List<TrabajadorEsclavisado> trabajadorEsclavisadoList){this.trabajadorEsclavisadoList=trabajadorEsclavisadoList;}
+    public void setTrabajadorEsclavizado(List<TrabajadorEsclavisado> trabajadorEsclavisadoList) {
+        this.trabajadorEsclavisadoList=trabajadorEsclavisadoList;
+    }
 
-    public Duenia getDuenia() { return duenia; }
-    public void setDuenia(Duenia duenia) { this.duenia = duenia; }
+    public Duenia getDuenia() {
+        return duenia;
+    }
+
+    public void setDuenia(Duenia duenia) {
+        this.duenia = duenia;
+    }
 }

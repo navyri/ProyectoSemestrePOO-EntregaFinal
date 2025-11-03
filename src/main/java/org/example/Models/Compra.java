@@ -12,11 +12,13 @@ public class Compra {
 
     // ATRIBUTOS
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private Date fecha;
     private double total;
     private String estado;
+
+    @OneToMany
     private List<LineaCompras> lineaCompras;
 
     // CONSTRUCTOR
@@ -69,7 +71,6 @@ public class Compra {
         return lineaCompras;
     }
 
-    //no estoy seguro si este se llegue a usar
     public void setLineaCompras(List<LineaCompras> lineaCompras) {
         this.lineaCompras = lineaCompras;
     }

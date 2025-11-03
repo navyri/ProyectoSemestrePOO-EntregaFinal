@@ -11,10 +11,14 @@ public class ConsejoSombrio {
 
     // ATRIBUTOS
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private String nombreClave;
+
+    @ManyToMany
     private List<AdministradorContenido> administradorContenidos;
+
+    @ManyToMany(mappedBy = "consejos")
     private List<AdministradorUsuario> administradorUsuarios;
 
     // CONSTRUCTOR
@@ -27,5 +31,37 @@ public class ConsejoSombrio {
 
     public ConsejoSombrio() {
 
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getNombreClave() {
+        return nombreClave;
+    }
+
+    public void setNombreClave(String nombreClave) {
+        this.nombreClave = nombreClave;
+    }
+
+    public List<AdministradorContenido> getAdministradoresContenido() {
+        return administradorContenidos;
+    }
+
+    public void setAdministradoresContenido(List<AdministradorContenido> administradoresContenido) {
+        this.administradorContenidos = administradoresContenido;
+    }
+
+    public List<AdministradorUsuario> getAdministradoresUsuario() {
+        return administradorUsuarios;
+    }
+
+    public void setAdministradoresUsuario(List<AdministradorUsuario> administradoresUsuario) {
+        this.administradorUsuarios = administradoresUsuario;
     }
 }

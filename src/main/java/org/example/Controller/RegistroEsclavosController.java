@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/registros")
@@ -24,10 +25,8 @@ public class RegistroEsclavosController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RegistroEsclavos> getById(@PathVariable Long id) {
-        Optional<RegistroEsclavos> registro = service.findById(id);
-        return registro.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public RegistroEsclavos getById(@PathVariable UUID id) {
+        return service.findById(id);
     }
 
     @PostMapping
@@ -36,24 +35,12 @@ public class RegistroEsclavosController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RegistroEsclavos> update(@PathVariable Long id, @RequestBody RegistroEsclavos rDetalles) {
-        Optional<RegistroEsclavos> optionalRegistro = service.findById(id);
-
-        if (optionalRegistro.isPresent()) {
-            RegistroEsclavos existingRegistro = optionalRegistro.get();
-            existingRegistro.setUltimoAcceso(rDetalles.getUltimoAcceso());
-            existingRegistro.setNivelCifrado(rDetalles.getNivelCifrado());
-            existingRegistro.setTrabajadores(rDetalles.getTrabajadores());
-            existingRegistro.setDuenia(rDetalles.getDuenia());
-
-            return ResponseEntity.ok(service.save(existingRegistro));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public RegistroEsclavos update(@PathVariable UUID id, @RequestBody RegistroEsclavos rDetalles) {
+        return service.update(id, rDetalles);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable UUID id) {
         service.delete(id);
     }
 }

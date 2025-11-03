@@ -12,10 +12,14 @@ public class Carrito {
 
     // ATRIBUTOS
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private Date fechaCreacion;
+
+    @ManyToMany
     private List<Producto> producto;
+
+    @OneToMany
     private List<LineaCarrito> lineaCarritos;
 
     // CONSTRUCTOR

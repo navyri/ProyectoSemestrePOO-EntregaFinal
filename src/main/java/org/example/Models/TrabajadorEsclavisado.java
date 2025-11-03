@@ -10,7 +10,7 @@ public class TrabajadorEsclavisado {
 
     // ATRIBUTOS
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private String nombre;
     private String paisOrigen;
@@ -19,7 +19,6 @@ public class TrabajadorEsclavisado {
     private int salud;
 
     @ManyToOne
-    @JoinColumn(name="frabrica_id")
     private Fabrica asignadoA;
 
     // CONSTRUCTOR
@@ -97,8 +96,12 @@ public class TrabajadorEsclavisado {
         this.asignadoA = asignadoA;
     }
 
-    public RegistroEsclavos getRegistro(){return registro;}
+    public RegistroEsclavos getRegistro() {
+        return registro;
+    }
 
-    public void setRegistro(RegistroEsclavos registro) { this.registro = registro; }
+    public void setRegistro(RegistroEsclavos registro) {
+        this.registro = registro;
+    }
 }
 

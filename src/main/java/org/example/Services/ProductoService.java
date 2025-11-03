@@ -1,5 +1,6 @@
 package org.example.Services;
 
+import org.example.Models.Duenia;
 import org.example.Models.Producto;
 import org.example.Models.Usuario;
 import org.example.Repositories.ProductoRepository;
@@ -18,39 +19,79 @@ public class ProductoService {
     }
 
     // METODO PARA REGISTRAR PRODUCTOS
-    public static void registrarProducto(List<Producto> productos, Scanner scanner, Usuario usuarioAutenticado) {
-        if (usuarioAutenticado == null || !usuarioAutenticado.getRol().equalsIgnoreCase("Administrador")) {
+    public void registrarProducto(Scanner scanner, Usuario usuarioAutenticado) {
+        if (usuarioAutenticado == null) {
             System.out.println("Acceso denegado. Unicamente los administradores pueden registrar productos");
             return;
         }
+        String rolNormalizado = usuarioAutenticado.getRol().replaceAll("\\s", "").toLowerCase();
+
+        boolean esAdministrador = rolNormalizado.equals("administradorcontenido") || rolNormalizado.equals("administrador");
+        boolean esDuenia = rolNormalizado.equals("duenia") || usuarioAutenticado instanceof Duenia;
+
+        if (!(esAdministrador || esDuenia)) {
+            System.out.println("Acceso denegado. Solo administradores y la dueña pueden registrar productos");
+            return;
+        }
+
         System.out.println("\nLlene los siguientes datos para registrar un producto");
         System.out.print("- Nombre del producto: ");
         String nombre = scanner.nextLine();
         System.out.print("- Descripcion: ");
         String descripcion = scanner.nextLine();
-        System.out.print("- Precio: ");
-        double precio = scanner.nextDouble(); scanner.nextLine();
 
-        if (precio < 0) {
-            System.out.println("No se permite registrar productos con precio negativo");
-            return;
+        double precio = -1;
+        while (true) {
+            System.out.print("- Precio: ");
+            String precioInput = scanner.nextLine();
+            try {
+                precio = Double.parseDouble(precioInput);
+                if (precio <= 0) {
+                    System.out.println("No se permite registrar productos con precio negativo");
+                    continue;
+                }
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Por favor ingrese un valor numerico valido para precio.");
+            }
         }
 
-        System.out.print("- Stock: ");
-        int cantidadStock = scanner.nextInt(); scanner.nextLine();
+        int cantidadStock = -1;
+        while (true) {
+            System.out.print("- Stock: ");
+            String stockInput = scanner.nextLine();
+            try {
+                cantidadStock = Integer.parseInt(stockInput);
+                if (cantidadStock < 0) {
+                System.out.println("No se permite registrar productos con stock negativo");
+                continue;
+                }
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Por favor ingrese un valor numerico entero valido para stock.");
+            }
+        }
 
-        if (cantidadStock < 0) {
-            System.out.println("No se permite registrar productos con stock negativo");
+        System.out.println("\nResumen de datos ingresados:");
+        System.out.println("- Nombre: " + nombre);
+        System.out.println("- Descripcion: " + descripcion);
+        System.out.println("- Precio: " + precio);
+        System.out.println("- Stock: " + cantidadStock);
+        System.out.print("¿Desea registrar el producto con estos datos? (Si/No): ");
+        String confirmacion = scanner.nextLine();
+        if (!confirmacion.equalsIgnoreCase("Si")) {
+            System.out.println("Registro cancelado");
             return;
         }
 
         Producto producto = new Producto(UUID.randomUUID(), nombre, descripcion, precio, cantidadStock, new Date(), null);
-        productos.add(producto);
+        productoRepository.save(producto);
         System.out.println("Producto registrado correctamente");
     }
 
     // METODO PARA LISTAR PRODUCTOS
-    public static void listarProductos(List<Producto> productos) {
+    public void listarProductos() {
+        List<Producto> productos = productoRepository.findAll();
         if (productos.isEmpty()) {
             System.out.println("No hay productos registrados");
         } else {
@@ -60,5 +101,10 @@ public class ProductoService {
                 System.out.println((i + 1) + ". " + p.getNombre() + " | $" + p.getPrecio() + " | Stock: " + p.getStock());
             }
         }
+    }
+
+    public Producto findById(UUID id) {
+        return productoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("No se encontro producto con el id: " + id));
     }
 }
