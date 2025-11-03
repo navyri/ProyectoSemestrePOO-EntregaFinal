@@ -3,10 +3,13 @@ package org.example.Services;
 import org.example.Models.Duenia;
 import org.example.Repositories.DueniaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Service
 public class DueniaService {
 
     @Autowired
@@ -21,7 +24,6 @@ public class DueniaService {
     }
 
     public Duenia save(Duenia d) {
-        // Si ya existe alguna Duenia en la base, rechaza la creacion
         if(dueniaRepository.count() > 0 && d.getId() == null) {
             throw new IllegalStateException("Solo puede existir una Dueña en el sistema");
         }

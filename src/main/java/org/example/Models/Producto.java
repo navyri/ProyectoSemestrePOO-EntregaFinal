@@ -17,6 +17,8 @@ public class Producto {
     private double precio;
     private int stock;
     private Date fechaLanzamiento;
+
+    @ManyToOne
     private Categoria categoria;
 
     // CONSTRUCTOR

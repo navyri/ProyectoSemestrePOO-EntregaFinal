@@ -2,6 +2,7 @@ package org.example.Services;
 
 import org.example.Models.*;
 import org.example.Repositories.CompraRepository;
+import org.example.Repositories.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.*;
@@ -11,6 +12,9 @@ public class CompraService {
 
     @Autowired
     private CompraRepository compraRepository;
+
+    @Autowired
+    private ProductoRepository productoRepository;
 
     public List<Compra> getAllCompra() {
         return compraRepository.findAll();
@@ -25,11 +29,12 @@ public class CompraService {
     }
 
     // METODO PARA REGISTRAR COMPRA
-    public static void registrarCompra(List<Compra> compras, List<Producto> productos, Usuario usuarioActivo, Scanner scanner) {
+    public void registrarCompra(Scanner scanner, Usuario usuarioActivo) {
         if (usuarioActivo == null) {
             System.out.println("Por favor inicie sesion para registrar una compra");
             return;
         }
+        List<Producto> productos = productoRepository.findAll();
         if (productos.isEmpty()) {
             System.out.println("No hay productos disponibles para comprar en el momento");
             return;
@@ -58,9 +63,10 @@ public class CompraService {
         }
 
         seleccionado.setStock(seleccionado.getStock() - cantidad);
+        productoRepository.save(seleccionado);
 
         Compra compra = new Compra(UUID.randomUUID(), new Date(), seleccionado.getPrecio() * cantidad, "Realizada");
-        compras.add(compra);
+        compraRepository.save(compra);
 
         System.out.println("Compra realizada correctamente");
     }

@@ -16,14 +16,14 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
-    public static void registrarUsuario(List<Usuario> usuarios, Scanner scanner) {
+    public void registrarUsuario(Scanner scanner) {
         System.out.println("\nPara registrarse llene los campos a continuacion:");
         System.out.print("- Nombre: ");
         String nombreIngresado = scanner.nextLine();
         System.out.print("- Correo electronico: ");
         String correoIngresado = scanner.nextLine();
 
-        for (Usuario usuarioExistente : usuarios) {
+        for (Usuario usuarioExistente : usuarioRepository.findAll()) {
             if (usuarioExistente.getEmail().equalsIgnoreCase(correoIngresado)) {
                 System.out.println("Ya existe un usuario registrado con ese correo electronico");
                 return;
@@ -33,7 +33,7 @@ public class UsuarioService {
         System.out.print("- Contraseña: ");
         String contrasenaIngresada = scanner.nextLine();
 
-        // Restriccion en base a los roles validos
+        // Restriccion con base en los roles validos
         String rolIngresado;
         String rolSinEspacios;
         while (true) {
@@ -51,7 +51,7 @@ public class UsuarioService {
         }
 
         if (rolSinEspacios.equals("duenia") || rolSinEspacios.equals("dueña")) {
-            for (Usuario usuarioExistente : usuarios) {
+            for (Usuario usuarioExistente : usuarioRepository.findAll()) {
                 String rolComparar = usuarioExistente.getRol().replaceAll("\\s", "").toLowerCase();
                 if (rolComparar.equals("duenia") || rolComparar.equals("dueña")) {
                     System.out.println("Ya existe una Dueña registrada. Solo puede haber una en el sistema.");
@@ -75,38 +75,55 @@ public class UsuarioService {
         UUID idGenerado = UUID.randomUUID();
         Date fechaRegistro = new Date();
 
-        // Logica en base al rol asignado
+        // Logica basandonos en el rol asignado
         switch (rolSinEspacios) {
             case "cliente" ->
                     nuevoUsuario = new Cliente(idGenerado, nombreIngresado, correoIngresado, contrasenaIngresada, rolIngresado, fechaRegistro, true);
 
             case "administradorcontenido" -> {
-                // Asignar permisos de edicion
                 boolean permisosEdicion = true;
                 nuevoUsuario = new AdministradorContenido(idGenerado, nombreIngresado, correoIngresado, contrasenaIngresada, rolIngresado, fechaRegistro, true, permisosEdicion);
             }
 
             case "administradorusuario" -> {
-                Random random = new Random();
-                int nivelAcceso = random.nextInt(3) + 1;
-                AdministradorUsuario adminUsuario = new AdministradorUsuario(idGenerado, nombreIngresado, correoIngresado, contrasenaIngresada, rolIngresado, fechaRegistro, true, 1); // Asignas temporal, luego setNivelAcceso
-                AdministradorUsuarioService service = new AdministradorUsuarioService();
-                service.setNivelAcceso(adminUsuario, nivelAcceso);
-                nuevoUsuario = adminUsuario;
-                System.out.println("Nivel de acceso asignado al administrador: " + nivelAcceso + "\n(1: suspender usuario, 2: reactivar usuario, 3: ambas)");
+                System.out.print("- ¿Nivel de acceso total? (Si/No): ");
+                String accesoTotal = scanner.nextLine().trim();
+                boolean nivelAcceso = accesoTotal.equalsIgnoreCase("si");
+                nuevoUsuario = new AdministradorUsuario(idGenerado, nombreIngresado, correoIngresado, contrasenaIngresada, rolIngresado, fechaRegistro, true, nivelAcceso);
+                System.out.println("Nivel de acceso asignado al administrador: " + (nivelAcceso ? "Total" : "Sin permisos"));
             }
+
             case "duenia", "dueña" -> {
                 System.out.print("- Clave maestra: ");
                 String claveMaestra = scanner.nextLine();
-                Date fechaCoronacion = new Date(); // O solicita si se requiere
+                Date fechaCoronacion = new Date();
                 nuevoUsuario = new Duenia(idGenerado, nombreIngresado, correoIngresado, contrasenaIngresada, "Dueña", fechaRegistro, true, claveMaestra, fechaCoronacion);
             }
         }
-        usuarios.add(nuevoUsuario);
+        usuarioRepository.save(nuevoUsuario);
         System.out.println("Usuario registrado correctamente");
     }
 
-    public static Usuario iniciarSesion(List<Usuario> usuarios, Scanner scanner) {
+    public void listarUsuarios() {
+        List<Usuario> usuarios = usuarioRepository.findAll();
+        if (usuarios.isEmpty()) {
+            System.out.println("No hay usuarios registrados");
+        } else {
+            System.out.println("\nUsuarios registrados:");
+            for (int i = 0; i < usuarios.size(); i++) {
+                Usuario u = usuarios.get(i);
+                String estado = u.isEstadoCuenta() ? "Activo" : "Suspendido";
+                System.out.println((i + 1) + ". " +
+                        "Nombre: " + u.getNombre() +
+                        " | Correo: " + u.getEmail() +
+                        " | Rol: " + u.getRol() +
+                        " | Estado: " + estado
+                );
+            }
+        }
+    }
+
+    public Usuario iniciarSesion(Scanner scanner) {
         while (true) {
             System.out.println("\nPor favor ingrese sus credenciales:");
             System.out.print("- Correo: ");
@@ -114,11 +131,11 @@ public class UsuarioService {
             System.out.print("- Contraseña: ");
             String contrasena = scanner.nextLine();
 
-            for (Usuario usuario : usuarios) {
+            for (Usuario usuario : usuarioRepository.findAll()) {
                 if (
-                        usuario.getEmail().equalsIgnoreCase(correo) &&
-                                usuario.getPasswordHash().equals(contrasena) &&
-                                usuario.isEstadoCuenta()
+                        usuario.getEmail().equalsIgnoreCase(correo)
+                        && usuario.getPasswordHash().equals(contrasena)
+                        && usuario.isEstadoCuenta()
                 ) {
                     System.out.println("Inicio de sesion exitoso");
                     return usuario;

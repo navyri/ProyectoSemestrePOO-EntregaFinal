@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import java.util.Date;
 import java.util.UUID;
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Usuario {
 
     // ATRIBUTOS
@@ -16,6 +17,8 @@ public abstract class Usuario {
     protected String passwordHash;
     protected String rol;
     protected Date fechaRegistro;
+
+    @Column(name="estado_cuenta", columnDefinition = "bit(1)", nullable = false)
     protected boolean estadoCuenta;
 
     // CONSTRUCTOR

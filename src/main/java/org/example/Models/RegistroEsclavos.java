@@ -17,8 +17,10 @@ public class RegistroEsclavos {
     private Date ultimoAcceso;
     private String nivelCifrado;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "registro", fetch = FetchType.EAGER)
     private List<TrabajadorEsclavisado> trabajadorEsclavisadoList;
 
+    @ManyToOne
     private Duenia cabrita;
 
     // CONSTRUCTOR

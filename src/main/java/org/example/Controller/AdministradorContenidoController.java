@@ -5,6 +5,7 @@ import org.example.Models.Categoria;
 import org.example.Models.Producto;
 import org.example.Services.AdministradorContenidoService;
 import org.example.Services.CategoriaService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
@@ -16,6 +17,13 @@ public class AdministradorContenidoController {
 
     private AdministradorContenidoService objAdministradorContenido;
     private CategoriaService objCategoriaService;
+
+    @Autowired
+    public AdministradorContenidoController(AdministradorContenidoService contenidoService, CategoriaService categoriaService) {
+        this.objAdministradorContenido = contenidoService;
+        this.objCategoriaService = categoriaService;
+    }
+
     @GetMapping
     public List<AdministradorContenido> getAll() {
         return objAdministradorContenido.getAllAdministradoresContenido();

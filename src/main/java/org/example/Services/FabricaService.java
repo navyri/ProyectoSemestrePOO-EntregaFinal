@@ -3,10 +3,13 @@ package org.example.Services;
 import org.example.Models.Fabrica;
 import org.example.Repositories.FabricaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Service
 public class FabricaService {
 
     @Autowired

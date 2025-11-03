@@ -1,9 +1,6 @@
 package org.example.Models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.*;
 import java.util.UUID;
 import java.util.Date;
 import java.util.List;
@@ -13,24 +10,25 @@ import java.util.List;
 @DiscriminatorValue("administrador_usuario")
 public class AdministradorUsuario extends Usuario {
 
-    private int nivelAcceso;
+    private boolean nivelAcceso;
 
+    @ManyToMany
     private List<ConsejoSombrio> consejos;
 
     public AdministradorUsuario() {
         super();
     }
 
-    public AdministradorUsuario(UUID id, String nombre, String email, String passwordHash, String rol, Date fechaRegistro, boolean estadoCuenta, int nivelAcceso) {
+    public AdministradorUsuario(UUID id, String nombre, String email, String passwordHash, String rol, Date fechaRegistro, boolean estadoCuenta, boolean nivelAcceso) {
         super(id, nombre, email, passwordHash, rol, fechaRegistro, estadoCuenta);
         this.nivelAcceso = nivelAcceso;
     }
 
-    public int getNivelAcceso() {
+    public boolean getNivelAcceso() {
         return this.nivelAcceso;
     }
 
-    public void setNivelAcceso(int nivelAcceso) {
+    public void setNivelAcceso(boolean nivelAcceso) {
         this.nivelAcceso = nivelAcceso;
     }
 
