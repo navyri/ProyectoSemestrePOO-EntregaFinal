@@ -5,6 +5,8 @@ import org.example.Repositories.CompraRepository;
 import org.example.Repositories.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.swing.*;
 import java.util.*;
 
 @Service
@@ -69,5 +71,72 @@ public class CompraService {
         compraRepository.save(compra);
 
         System.out.println("Compra realizada correctamente");
+    }
+
+    //METODO DE REGISTRAR COMPRAS PARA LA INTERFAZ
+    public void registrarCompraInterfaz(Usuario usuarioActivo) {
+        if (usuarioActivo == null) {
+            JOptionPane.showMessageDialog(null, "Por favor inicie sesion para registrar una compra");
+            return;
+        }
+        List<Producto> productos = productoRepository.findAll();
+        if (productos.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No hay productos disponibles para comprar en el momento");
+            return;
+        }
+
+        // Armando el mensaje con la lista de productos
+        StringBuilder lista = new StringBuilder("LISTA DE PRODUCTOS DISPONIBLES:\n\n");
+        for (int i = 0; i < productos.size(); i++) {
+            Producto p = productos.get(i);
+            lista.append((i + 1)).append(". ")
+                    .append(p.getNombre())
+                    .append(" | $").append(p.getPrecio())
+                    .append(" | Stock: ").append(p.getStock())
+                    .append("\n");
+        }
+        lista.append("\nIngrese el numero del producto a comprar:");
+
+        String entrada = JOptionPane.showInputDialog(null, lista.toString(), "Seleccionar producto", JOptionPane.QUESTION_MESSAGE);
+
+        if (entrada == null) return;
+
+        int numeroProductoElegido = -1;
+        try {
+            numeroProductoElegido = Integer.parseInt(entrada.trim());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Entrada invalida. Debe ser un numero.");
+            return;
+        }
+
+        if (numeroProductoElegido < 1 || numeroProductoElegido > productos.size()) {
+            JOptionPane.showMessageDialog(null, "Producto no valido");
+            return;
+        }
+        Producto seleccionado = productos.get(numeroProductoElegido - 1);
+
+        int cantidad = -1;
+        try {
+            String cantidadEntrada = JOptionPane.showInputDialog("- Ingrese la cantidad que desea comprar");
+            if (cantidadEntrada != null) {
+                cantidad = Integer.parseInt(cantidadEntrada.trim());
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Cantidad no valida / error al ingresar la cantidad");
+            return;
+        }
+
+        if (cantidad <= 0 || cantidad > seleccionado.getStock()) {
+            JOptionPane.showMessageDialog(null, "La cantidad ingresada no es valida o el stock es insuficiente");
+            return;
+        }
+
+        seleccionado.setStock(seleccionado.getStock() - cantidad);
+        productoRepository.save(seleccionado);
+
+        Compra compra = new Compra(UUID.randomUUID(), new Date(), seleccionado.getPrecio() * cantidad, "Realizada");
+        compraRepository.save(compra);
+
+        JOptionPane.showMessageDialog(null, "Compra realizada correctamente");
     }
 }
