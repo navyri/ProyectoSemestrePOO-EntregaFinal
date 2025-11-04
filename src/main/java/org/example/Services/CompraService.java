@@ -72,52 +72,62 @@ public class CompraService {
 
         System.out.println("Compra realizada correctamente");
     }
+
     //METODO DE REGISTRAR COMPRAS PARA LA INTERFAZ
     public void registrarCompraInterfaz(Usuario usuarioActivo) {
         if (usuarioActivo == null) {
-            JOptionPane.showMessageDialog(null,"Por favor inicie sesion para registrar una compra");
+            JOptionPane.showMessageDialog(null, "Por favor inicie sesión para registrar una compra");
             return;
         }
         List<Producto> productos = productoRepository.findAll();
         if (productos.isEmpty()) {
-            JOptionPane.showMessageDialog(null,"No hay productos disponibles para comprar en el momento");
+            JOptionPane.showMessageDialog(null, "No hay productos disponibles para comprar en el momento");
             return;
         }
-        JOptionPane.showInputDialog("\nSeleccione el producto a comprar");
+
+        // Armando el mensaje con la lista de productos
+        StringBuilder lista = new StringBuilder("LISTA DE PRODUCTOS DISPONIBLES:\n\n");
         for (int i = 0; i < productos.size(); i++) {
             Producto p = productos.get(i);
-            JOptionPane.showMessageDialog(null,(i + 1) + ". " + p.getNombre() + " | $" + p.getPrecio() + " | Stock: " + p.getStock());
+            lista.append((i + 1)).append(". ")
+                    .append(p.getNombre())
+                    .append(" | $").append(p.getPrecio())
+                    .append(" | Stock: ").append(p.getStock())
+                    .append("\n");
         }
+        lista.append("\nIngrese el número del producto a comprar:");
+
+        String entrada = JOptionPane.showInputDialog(null, lista.toString(), "Seleccionar producto", JOptionPane.QUESTION_MESSAGE);
+
+        if (entrada == null) return;
 
         int numeroProductoElegido = -1;
         try {
-            String entrada = JOptionPane.showInputDialog("- Ingrese el número de producto:");
-            if (entrada != null) {
-                numeroProductoElegido = Integer.parseInt(entrada.trim());
-            }
+            numeroProductoElegido = Integer.parseInt(entrada.trim());
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Entrada inválida. Debe ser un número.");
-        }
-
-        if (numeroProductoElegido < 1 || numeroProductoElegido > productos.size()) {
-            JOptionPane.showMessageDialog(null,"Producto no valido");
             return;
         }
 
+        if (numeroProductoElegido < 1 || numeroProductoElegido > productos.size()) {
+            JOptionPane.showMessageDialog(null, "Producto no válido");
+            return;
+        }
         Producto seleccionado = productos.get(numeroProductoElegido - 1);
 
         int cantidad = -1;
-        try{
-            String entrada=JOptionPane.showInputDialog("- Ingrese la cantidad que desea comprar");
-            if(entrada!=null){
-                cantidad=Integer.parseInt(entrada.trim());
+        try {
+            String cantidadEntrada = JOptionPane.showInputDialog("- Ingrese la cantidad que desea comprar");
+            if (cantidadEntrada != null) {
+                cantidad = Integer.parseInt(cantidadEntrada.trim());
             }
-        }catch(NumberFormatException e){
-            JOptionPane.showMessageDialog(null,"Cantidad no valida / error al ingresar la cantidad");
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Cantidad no válida / error al ingresar la cantidad");
+            return;
         }
 
         if (cantidad <= 0 || cantidad > seleccionado.getStock()) {
-            JOptionPane.showMessageDialog(null,"La cantidad ingresada no es valida o el stock es insuficiente");
+            JOptionPane.showMessageDialog(null, "La cantidad ingresada no es válida o el stock es insuficiente");
             return;
         }
 
@@ -127,6 +137,6 @@ public class CompraService {
         Compra compra = new Compra(UUID.randomUUID(), new Date(), seleccionado.getPrecio() * cantidad, "Realizada");
         compraRepository.save(compra);
 
-        JOptionPane.showMessageDialog(null,"Compra realizada correctamente");
+        JOptionPane.showMessageDialog(null, "Compra realizada correctamente");
     }
 }

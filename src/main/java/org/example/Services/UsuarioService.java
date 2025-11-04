@@ -147,8 +147,8 @@ public class UsuarioService {
                 }
             }
         }
-        String mensaje= "\n"+"-Nombre ingresado: "+ nombreIngresado +"\n"+
-                "-Correo Ingresado: "+ nombreIngresado +"\n" +"-Rol elegido: "+ rolIngresado;
+        String mensaje= "\n"+"- Nombre ingresado: "+ nombreIngresado +"\n"+
+                "- Correo Ingresado: "+ correoIngresado +"\n" +"- Rol elegido: "+ rolIngresado;
         JOptionPane.showMessageDialog(null,"Resumen de datos ingresados: "+mensaje);
 
         String confirmacion=JOptionPane.showInputDialog("¿Desea registrar el usuario con estos datos? (Si/No): ");
@@ -208,6 +208,26 @@ public class UsuarioService {
         }
     }
 
+    public void listarUsuariosInterfaz() {
+        List<Usuario> usuarios = usuarioRepository.findAll();
+        if (usuarios.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No hay usuarios registrados");
+        } else {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Usuarios registrados:\n\n");
+            for (int i = 0; i < usuarios.size(); i++) {
+                Usuario u = usuarios.get(i);
+                String estado = u.isEstadoCuenta() ? "Activo" : "Suspendido";
+                sb.append((i + 1))
+                        .append(". Nombre: ").append(u.getNombre())
+                        .append(" | Correo: ").append(u.getEmail())
+                        .append(" | Rol: ").append(u.getRol())
+                        .append(" | Estado: ").append(estado)
+                        .append("\n");
+            }
+            JOptionPane.showMessageDialog(null, sb.toString());
+        }
+    }
 
     public Usuario iniciarSesion(Scanner scanner) {
         while (true) {

@@ -9,16 +9,18 @@ import java.util.Map;
 
 public class MenuViewInterfaz {
 
-    public static Map<Integer, String> mostrarMenuYObtenerOpciones(Usuario usuarioActivo) {
+    private static Map<Integer, String> ultimasOpciones = new HashMap<>();
+
+    public static int mostrarMenuYObtenerOpcion(Usuario usuarioActivo) {
         int numeroOpcion = 1;
-        Map<Integer, String> opciones = new HashMap<>();
+        ultimasOpciones = new HashMap<>();
         String menu = "BIENVENIDO AL MENÚ DE GLOW UP\n\n";
 
         if (usuarioActivo == null) {
             menu += numeroOpcion + ". Registrar usuario\n";
-            opciones.put(numeroOpcion++, "registrarUsuario");
+            ultimasOpciones.put(numeroOpcion++, "registrarUsuario");
             menu += numeroOpcion + ". Iniciar sesion\n";
-            opciones.put(numeroOpcion++, "iniciarSesion");
+            ultimasOpciones.put(numeroOpcion++, "iniciarSesion");
         } else {
             String rolSinEspacios = usuarioActivo.getRol().replaceAll("\\s", "").toLowerCase();
             switch (rolSinEspacios) {
@@ -26,55 +28,55 @@ public class MenuViewInterfaz {
                 case "dueña":
                     menu += "MENU SUPREMO DE LA DUEÑA CABRITA SAKURA\n";
                     menu += numeroOpcion + ". Gestionar esclavos\n";
-                    opciones.put(numeroOpcion++, "gestionarEsclavos");
+                    ultimasOpciones.put(numeroOpcion++, "gestionarEsclavos");
                     menu += numeroOpcion + ". Gestionar fábricas\n";
-                    opciones.put(numeroOpcion++, "gestionarFabricas");
+                    ultimasOpciones.put(numeroOpcion++, "gestionarFabricas");
                     menu += numeroOpcion + ". Gestionar productos\n";
-                    opciones.put(numeroOpcion++, "gestionarProductos");
+                    ultimasOpciones.put(numeroOpcion++, "gestionarProductos");
                     menu += numeroOpcion + ". Gestionar usuarios\n";
-                    opciones.put(numeroOpcion++, "gestionarUsuarios");
+                    ultimasOpciones.put(numeroOpcion++, "gestionarUsuarios");
                     menu += numeroOpcion + ". Registrar compra\n";
-                    opciones.put(numeroOpcion++, "registrarCompra");
+                    ultimasOpciones.put(numeroOpcion++, "registrarCompra");
                     menu += numeroOpcion + ". Cerrar sesión\n";
-                    opciones.put(numeroOpcion++, "cerrarSesion");
+                    ultimasOpciones.put(numeroOpcion++, "cerrarSesion");
                     break;
 
                 case "administradorcontenido":
                     menu += numeroOpcion + ". Registro de productos\n";
-                    opciones.put(numeroOpcion++, "registroProductos");
+                    ultimasOpciones.put(numeroOpcion++, "registroProductos");
                     menu += numeroOpcion + ". Listar productos\n";
-                    opciones.put(numeroOpcion++, "listarProductos");
+                    ultimasOpciones.put(numeroOpcion++, "listarProductos");
                     menu += numeroOpcion + ". Registrar compra\n";
-                    opciones.put(numeroOpcion++, "registrarCompra");
+                    ultimasOpciones.put(numeroOpcion++, "registrarCompra");
                     menu += numeroOpcion + ". Cerrar sesion\n";
-                    opciones.put(numeroOpcion++, "cerrarSesion");
+                    ultimasOpciones.put(numeroOpcion++, "cerrarSesion");
                     break;
 
                 case "administradorusuario":
                     AdministradorUsuario adminUser = (AdministradorUsuario) usuarioActivo;
                     if (adminUser.getNivelAcceso()) {
                         menu += numeroOpcion + ". Suspender usuario\n";
-                        opciones.put(numeroOpcion++, "suspenderUsuario");
+                        ultimasOpciones.put(numeroOpcion++, "suspenderUsuario");
                         menu += numeroOpcion + ". Reactivar usuario\n";
-                        opciones.put(numeroOpcion++, "reactivarUsuario");
+                        ultimasOpciones.put(numeroOpcion++, "reactivarUsuario");
                         menu += numeroOpcion + ". Listar usuarios\n";
-                        opciones.put(numeroOpcion++, "listarUsuarios");
+                        ultimasOpciones.put(numeroOpcion++, "listarUsuarios");
                     }
                     menu += numeroOpcion + ". Listar productos\n";
-                    opciones.put(numeroOpcion++, "listarProductos");
+                    ultimasOpciones.put(numeroOpcion++, "listarProductos");
                     menu += numeroOpcion + ". Registrar compra\n";
-                    opciones.put(numeroOpcion++, "registrarCompra");
+                    ultimasOpciones.put(numeroOpcion++, "registrarCompra");
                     menu += numeroOpcion + ". Cerrar sesion\n";
-                    opciones.put(numeroOpcion++, "cerrarSesion");
+                    ultimasOpciones.put(numeroOpcion++, "cerrarSesion");
                     break;
 
                 default:
                     menu += numeroOpcion + ". Listar productos\n";
-                    opciones.put(numeroOpcion++, "listarProductos");
+                    ultimasOpciones.put(numeroOpcion++, "listarProductos");
                     menu += numeroOpcion + ". Registrar compra\n";
-                    opciones.put(numeroOpcion++, "registrarCompra");
+                    ultimasOpciones.put(numeroOpcion++, "registrarCompra");
                     menu += numeroOpcion + ". Cerrar sesion\n";
-                    opciones.put(numeroOpcion++, "cerrarSesion");
+                    ultimasOpciones.put(numeroOpcion++, "cerrarSesion");
             }
         }
 
@@ -87,7 +89,7 @@ public class MenuViewInterfaz {
             try {
                 String entrada = JOptionPane.showInputDialog(null, menu + "\nIngrese un numero para continuar:");
                 if (entrada == null) {
-                    opcionSeleccionada = 0;
+                    opcionSeleccionada = 0; // cancelar es salir
                     entradaValida = true;
                 } else {
                     opcionSeleccionada = Integer.parseInt(entrada.trim());
@@ -98,7 +100,11 @@ public class MenuViewInterfaz {
             }
         }
 
-        opciones.put(-1, String.valueOf(opcionSeleccionada));
-        return opciones;
+        return opcionSeleccionada;
     }
+
+    public static Map<Integer, String> getUltimasOpciones() {
+        return ultimasOpciones;
+    }
+
 }

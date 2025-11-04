@@ -110,18 +110,18 @@ public class ProductoService {
             JOptionPane.showMessageDialog(null, "Llene los siguientes datos para registrar un producto");
             String nombre = JOptionPane.showInputDialog(null, "Nombre del producto");
             if (nombre == null || nombre.trim().isEmpty()) { //quitar espacios al inicio y al final
-                JOptionPane.showMessageDialog(null, "el nombre no puede estar vacio");
+                JOptionPane.showMessageDialog(null, "El nombre no puede estar vacio");
                 return;
             }
             String descripcion = JOptionPane.showInputDialog("Descripcion del producto");
             if (descripcion == null || descripcion.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "la descripcion no puede estar vacia");
+                JOptionPane.showMessageDialog(null, "La descripcion no puede estar vacia");
                 return;
             }
 
             double precio = -1;
             while (true) {
-                String precioInput = JOptionPane.showInputDialog("precio del producto");
+                String precioInput = JOptionPane.showInputDialog("Precio del producto");
                 if (precioInput == null) {
                     JOptionPane.showMessageDialog(null, "No se pueden ingresar valores vacios");
                     return;
@@ -141,7 +141,7 @@ public class ProductoService {
             int cantidadStock = -1;
             while (true) {
 
-                String stockInput = JOptionPane.showInputDialog("- Stock: -");
+                String stockInput = JOptionPane.showInputDialog("- Stock: ");
                 try {
                     cantidadStock = Integer.parseInt(stockInput);
                     if (cantidadStock < 0) {
@@ -155,8 +155,8 @@ public class ProductoService {
             }
 
 
-            String mensaje= "\n"+"-Nombre: "+nombre + "\n"+ "-Descripcion: "+ descripcion +
-                    "\n" +"-Precio: "+ precio + "\n" +"-Stock: " +cantidadStock;
+            String mensaje= "\n"+"- Nombre: "+nombre + "\n"+ "- Descripcion: "+ descripcion +
+                    "\n" +"- Precio: "+ precio + "\n" +"- Stock: " +cantidadStock;
             JOptionPane.showMessageDialog(null,"Resumen de datos ingresados: "+mensaje);
 
             String confirmacion = JOptionPane.showInputDialog(null,"¿Desea registrar el producto con estos datos? (Si/No): ");
@@ -184,6 +184,28 @@ public class ProductoService {
                 Producto p = productos.get(i);
                 System.out.println((i + 1) + ". " + p.getNombre() + " | $" + p.getPrecio() + " | Stock: " + p.getStock());
             }
+        }
+    }
+
+    public void listarProductosInterfaz() {
+        List<Producto> productos = productoRepository.findAll();
+        if (productos.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No hay productos registrados");
+        } else {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Productos disponibles:\n\n");
+            for (int i = 0; i < productos.size(); i++) {
+                Producto p = productos.get(i);
+                sb.append((i + 1))
+                        .append(". ")
+                        .append(p.getNombre())
+                        .append(" | $")
+                        .append(p.getPrecio())
+                        .append(" | Stock: ")
+                        .append(p.getStock())
+                        .append("\n");
+            }
+            JOptionPane.showMessageDialog(null, sb.toString());
         }
     }
 

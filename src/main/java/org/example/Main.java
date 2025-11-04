@@ -17,6 +17,7 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
+        System.setProperty("java.awt.headless", "false");
         SpringApplication.run(Main.class, args);
     }
 
@@ -43,19 +44,13 @@ public class Main {
 
                 if (usarInterfaz) {
                     // Mostrar menú por interfaz
-                    opciones = MenuViewInterfaz.mostrarMenuYObtenerOpciones(usuarioActivo);
-                    try {
-                        String entrada = JOptionPane.showInputDialog("Ingrese un número en base a lo que desee realizar:");
-                        if (entrada == null) {
-                            // Si el usuario cancela
-                            JOptionPane.showMessageDialog(null, "Saliendo del programa.");
-                            break;
-                        }
-                        opcion = Integer.parseInt(entrada.trim());
-                    } catch (NumberFormatException e) {
-                        JOptionPane.showMessageDialog(null, "La opcion digitada no es valida. Por favor, ingrese un numero.");
-                        continue;
+                    int opcionMenu = MenuViewInterfaz.mostrarMenuYObtenerOpcion(usuarioActivo);
+                    if (opcionMenu == 0) { // o -1 si así lo prefieres para cancelar
+                        mostrarMensaje("Saliendo del programa.", usarInterfaz);
+                        break;
                     }
+                    opcion = opcionMenu;
+                    opciones = MenuViewInterfaz.getUltimasOpciones();
                 } else {
                     // Mostrar menú por consola
                     opciones = MenuView.mostrarMenuYObtenerOpciones(usuarioActivo);
@@ -138,13 +133,17 @@ public class Main {
                             break;
 
                         case "listarProductos":
-                            productoService.listarProductos();
+                            if (usarInterfaz)
+                                productoService.listarProductosInterfaz();
+                            else
+                                productoService.listarProductos();
                             break;
-
                         case "listarUsuarios":
-                            usuarioService.listarUsuarios();
+                            if (usarInterfaz)
+                                usuarioService.listarUsuariosInterfaz();
+                            else
+                                usuarioService.listarUsuarios();
                             break;
-
                         case "registrarCompra":
                             if (usarInterfaz)
                                 compraService.registrarCompraInterfaz(usuarioActivo);
@@ -170,7 +169,6 @@ public class Main {
                             usuarioActivo = usuarioService.cerrarSesion(usuarioActivo);
                             mostrarMensaje("Sesión cerrada correctamente.", usarInterfaz);
                             break;
-
                         case "salir":
                             salir = true;
                             break;
