@@ -35,7 +35,7 @@ public class Main {
             boolean salir = false;
             Usuario usuarioActivo = null;
 
-            // true si quieremos usar interfaz gráfica
+            // true si quieremos usar interfaz grafica
             boolean usarInterfaz = true;
 
             while (!salir) {
@@ -43,16 +43,16 @@ public class Main {
                 Map<Integer, String> opciones;
 
                 if (usarInterfaz) {
-                    // Mostrar menú por interfaz
+                    // Mostrar menu por interfaz
                     int opcionMenu = MenuViewInterfaz.mostrarMenuYObtenerOpcion(usuarioActivo);
-                    if (opcionMenu == 0) { // o -1 si así lo prefieres para cancelar
+                    if (opcionMenu == 0) { // o -1 si asi lo prefieres para cancelar
                         mostrarMensaje("Saliendo del programa.", usarInterfaz);
                         break;
                     }
                     opcion = opcionMenu;
                     opciones = MenuViewInterfaz.getUltimasOpciones();
                 } else {
-                    // Mostrar menú por consola
+                    // Mostrar menu por consola
                     opciones = MenuView.mostrarMenuYObtenerOpciones(usuarioActivo);
                     try {
                         String entrada = scanner.nextLine();
@@ -167,14 +167,14 @@ public class Main {
 
                         case "cerrarSesion":
                             usuarioActivo = usuarioService.cerrarSesion(usuarioActivo);
-                            mostrarMensaje("Sesión cerrada correctamente.", usarInterfaz);
+                            mostrarMensaje("Sesion cerrada correctamente.", usarInterfaz);
                             break;
                         case "salir":
                             salir = true;
                             break;
 
                         default:
-                            mostrarMensaje("La opción digitada no es válida.", usarInterfaz);
+                            mostrarMensaje("La opcion digitada no es valida.", usarInterfaz);
                             break;
                     }
                 } catch (Exception e) {

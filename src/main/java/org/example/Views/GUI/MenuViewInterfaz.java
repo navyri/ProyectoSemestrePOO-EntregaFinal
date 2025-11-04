@@ -14,7 +14,7 @@ public class MenuViewInterfaz {
     public static int mostrarMenuYObtenerOpcion(Usuario usuarioActivo) {
         int numeroOpcion = 1;
         ultimasOpciones = new HashMap<>();
-        String menu = "BIENVENIDO AL MENÚ DE GLOW UP\n\n";
+        String menu = "BIENVENIDO AL MENU DE GLOW UP\n\n";
 
         if (usuarioActivo == null) {
             menu += numeroOpcion + ". Registrar usuario\n";
@@ -29,7 +29,7 @@ public class MenuViewInterfaz {
                     menu += "MENU SUPREMO DE LA DUEÑA CABRITA SAKURA\n";
                     menu += numeroOpcion + ". Gestionar esclavos\n";
                     ultimasOpciones.put(numeroOpcion++, "gestionarEsclavos");
-                    menu += numeroOpcion + ". Gestionar fábricas\n";
+                    menu += numeroOpcion + ". Gestionar fabricas\n";
                     ultimasOpciones.put(numeroOpcion++, "gestionarFabricas");
                     menu += numeroOpcion + ". Gestionar productos\n";
                     ultimasOpciones.put(numeroOpcion++, "gestionarProductos");
@@ -37,7 +37,7 @@ public class MenuViewInterfaz {
                     ultimasOpciones.put(numeroOpcion++, "gestionarUsuarios");
                     menu += numeroOpcion + ". Registrar compra\n";
                     ultimasOpciones.put(numeroOpcion++, "registrarCompra");
-                    menu += numeroOpcion + ". Cerrar sesión\n";
+                    menu += numeroOpcion + ". Cerrar sesion\n";
                     ultimasOpciones.put(numeroOpcion++, "cerrarSesion");
                     break;
 
@@ -96,7 +96,7 @@ public class MenuViewInterfaz {
                     entradaValida = true;
                 }
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "Por favor, ingrese un numero válido.", "Error de entrada", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Por favor, ingrese un numero valido.", "Error de entrada", JOptionPane.ERROR_MESSAGE);
             }
         }
 

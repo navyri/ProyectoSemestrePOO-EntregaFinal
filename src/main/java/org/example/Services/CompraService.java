@@ -76,7 +76,7 @@ public class CompraService {
     //METODO DE REGISTRAR COMPRAS PARA LA INTERFAZ
     public void registrarCompraInterfaz(Usuario usuarioActivo) {
         if (usuarioActivo == null) {
-            JOptionPane.showMessageDialog(null, "Por favor inicie sesión para registrar una compra");
+            JOptionPane.showMessageDialog(null, "Por favor inicie sesion para registrar una compra");
             return;
         }
         List<Producto> productos = productoRepository.findAll();
@@ -95,7 +95,7 @@ public class CompraService {
                     .append(" | Stock: ").append(p.getStock())
                     .append("\n");
         }
-        lista.append("\nIngrese el número del producto a comprar:");
+        lista.append("\nIngrese el numero del producto a comprar:");
 
         String entrada = JOptionPane.showInputDialog(null, lista.toString(), "Seleccionar producto", JOptionPane.QUESTION_MESSAGE);
 
@@ -105,12 +105,12 @@ public class CompraService {
         try {
             numeroProductoElegido = Integer.parseInt(entrada.trim());
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Entrada inválida. Debe ser un número.");
+            JOptionPane.showMessageDialog(null, "Entrada invalida. Debe ser un numero.");
             return;
         }
 
         if (numeroProductoElegido < 1 || numeroProductoElegido > productos.size()) {
-            JOptionPane.showMessageDialog(null, "Producto no válido");
+            JOptionPane.showMessageDialog(null, "Producto no valido");
             return;
         }
         Producto seleccionado = productos.get(numeroProductoElegido - 1);
@@ -122,12 +122,12 @@ public class CompraService {
                 cantidad = Integer.parseInt(cantidadEntrada.trim());
             }
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Cantidad no válida / error al ingresar la cantidad");
+            JOptionPane.showMessageDialog(null, "Cantidad no valida / error al ingresar la cantidad");
             return;
         }
 
         if (cantidad <= 0 || cantidad > seleccionado.getStock()) {
-            JOptionPane.showMessageDialog(null, "La cantidad ingresada no es válida o el stock es insuficiente");
+            JOptionPane.showMessageDialog(null, "La cantidad ingresada no es valida o el stock es insuficiente");
             return;
         }
 

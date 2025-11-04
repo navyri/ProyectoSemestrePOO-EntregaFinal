@@ -24,7 +24,7 @@ public class DueniaViewInterfaz {
                             "3. Gestionar productos\n" +
                             "4. Gestionar usuarios\n" +
                             "0. Volver al menu anterior\n\n" +
-                            "Ingrese un numero según lo que desee realizar:");
+                            "Ingrese un numero segun lo que desee realizar:");
 
             if (eleccion == null) break;
 
@@ -197,11 +197,11 @@ public class DueniaViewInterfaz {
             return;
         }
         // Mostrar registros y sus esclavos
-        StringBuilder texto = new StringBuilder("Seleccione el número de registro a editar:\n");
+        StringBuilder texto = new StringBuilder("Seleccione el numero de registro a editar:\n");
         for (int i = 0; i < lista.size(); i++) {
             RegistroEsclavos r = lista.get(i);
             texto.append((i + 1)).append(". Nivel: ").append(r.getNivelCifrado())
-                    .append(" | Último acceso: ").append(r.getUltimoAcceso());
+                    .append(" | Ultimo acceso: ").append(r.getUltimoAcceso());
             List<TrabajadorEsclavisado> trabajadores = r.getTrabajadores();
             if (!trabajadores.isEmpty()) {
                 texto.append(" | Esclavos: ");
@@ -219,7 +219,7 @@ public class DueniaViewInterfaz {
             if (seleccion == null) return;
             int index = Integer.parseInt(seleccion) - 1;
             if (index < 0 || index >= lista.size())  {
-                JOptionPane.showMessageDialog(null, "Selección no válida.");
+                JOptionPane.showMessageDialog(null, "Seleccion no valida.");
                 return;
             }
             RegistroEsclavos r = lista.get(index);
@@ -240,9 +240,9 @@ public class DueniaViewInterfaz {
                             + "\nEdad: " + t.getEdad()
                             + "\nSalud actual: " + t.getSalud()
                             + (t.getAsignadoA() != null
-                            ? "\nFábrica actual: " + t.getAsignadoA().getPais() + " - " + t.getAsignadoA().getCuidad()
-                            : "\nSin fábrica asignada")
-                            + "\n\n(Ingrese nuevo nivel de salud [0-100], vacío para mantener):";
+                            ? "\nFabrica actual: " + t.getAsignadoA().getPais() + " - " + t.getAsignadoA().getCuidad()
+                            : "\nSin fabrica asignada")
+                            + "\n\n(Ingrese nuevo nivel de salud [0-100], vacio para mantener):";
 
                 String inputSalud = JOptionPane.showInputDialog(info);
                 if (inputSalud != null && !inputSalud.trim().isEmpty()) {
@@ -254,17 +254,17 @@ public class DueniaViewInterfaz {
                             t.setSalud(nuevaSalud);
                         }
                     } catch (NumberFormatException e) {
-                        JOptionPane.showMessageDialog(null, "Valor no válido, manteniendo el anterior.");
+                        JOptionPane.showMessageDialog(null, "Valor no valido, manteniendo el anterior.");
                     }
                 }
 
-                // Mostrar fábricas disponibles y reasignar si el usuario lo desea
+                // Mostrar fabricas disponibles y reasignar si el usuario lo desea
                 List<Fabrica> fabricas = fabricaService.getAllFabrica();
                 Fabrica actual = t.getAsignadoA();
                 if (fabricas.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "No hay fábricas disponibles para asignar.");
+                    JOptionPane.showMessageDialog(null, "No hay fabricas disponibles para asignar.");
                 } else {
-                    StringBuilder sb = new StringBuilder("Fábricas disponibles:\n");
+                    StringBuilder sb = new StringBuilder("Fabricas disponibles:\n");
                     for (int j = 0; j < fabricas.size(); j++) {
                         Fabrica f = fabricas.get(j);
                         sb.append((j + 1)).append(". ").append(f.getPais()).append(" - ").append(f.getCuidad());
@@ -273,18 +273,18 @@ public class DueniaViewInterfaz {
                         }
                         sb.append("\n");
                     }
-                    sb.append("Ingrese número de fábrica para reasignar (vacío para mantener):");
+                    sb.append("Ingrese numero de fabrica para reasignar (vacio para mantener):");
                     String inputFabrica = JOptionPane.showInputDialog(sb.toString());
                     if (inputFabrica != null && !inputFabrica.trim().isEmpty()) {
                         try {
                             int idxFab = Integer.parseInt(inputFabrica.trim()) - 1;
                             if (idxFab < 0 || idxFab >= fabricas.size()) {
-                                JOptionPane.showMessageDialog(null, "Selección inválida. Se mantiene la fábrica actual.");
+                                JOptionPane.showMessageDialog(null, "Seleccion invalida. Se mantiene la fabrica actual.");
                             } else {
                                 t.setAsignadoA(fabricas.get(idxFab));
                             }
                         } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "Valor no válido, se mantiene la asignación actual.");
+                            JOptionPane.showMessageDialog(null, "Valor no valido, se mantiene la asignacion actual.");
                         }
                     }
                 }
@@ -307,7 +307,7 @@ public class DueniaViewInterfaz {
         for (int i = 0; i < lista.size(); i++) {
             RegistroEsclavos r = lista.get(i);
             texto.append((i + 1)).append(". Nivel: ").append(r.getNivelCifrado())
-                    .append(" | Último acceso: ").append(r.getUltimoAcceso());
+                    .append(" | Ultimo acceso: ").append(r.getUltimoAcceso());
 
             List<TrabajadorEsclavisado> trabajadores = r.getTrabajadores();
             if (!trabajadores.isEmpty()) {
@@ -502,7 +502,7 @@ public class DueniaViewInterfaz {
                     "GESTION DE USUARIOS\n" +
                             "1. Registrar usuario\n" +
                             "2. Listar usuarios\n" +
-                            "0. Volver al menú principal");
+                            "0. Volver al menu principal");
 
             if (eleccion == null) break;
 
